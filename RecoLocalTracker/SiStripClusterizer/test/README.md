@@ -19,8 +19,14 @@
 scram b -j8
 cmsRun readout_RECO_SiStripCluster.py
 cmsRun readout_RECO_SiStripApproxCluster.py
-root -l Raw_53_clusterNtuple.root
+root -l output/RawPrime_53_clusterNtuple.root
 root [1] SiStripClustersDump->cd()
 root [2] clusters->Draw("barycenter")               
 root [3] clusters->Draw("charge")
+root [4] .q
+root -l output/RawPrime_53_approxClusterNtuple.root
+root [1] SiStripApproximatedClustersDump->cd()
+root [2] ApproxClusters->Draw("barycenter")               
+root [3] ApproxClusters->Draw("charge")
+root [4] .q
 ```
