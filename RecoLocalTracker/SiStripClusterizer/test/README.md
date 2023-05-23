@@ -1,7 +1,7 @@
 ### Reading out cluster info from Raw RECO file
 - Steering file: [readout_RECO_Raw.py](readout_RECO_Raw.py)
 	- Input: `/HITestRaw6/phys_heavyions_ops-crab_Raw_Filtered_FEVT_March20_v2-791d174b6f0532ee9d9680f5a2c2df80/USER` [edmEventSize](../data/Raw_edmEventSize.txt)  
-		> I downloaded one of the [file](../data/Raw_53.root) from DAS for now, just for the convenience of developing the code. I'll change it to the xrootd afterwards so as to read the whole dataset.
+		> I downloaded one of the file (/afs/cern.ch/user/y/yuchenc/0518/CMSSW_13_0_6/src/RecoLocalTracker/SiStripClusterizer/data/Raw_53.root) from DAS for now, just for the convenience of developing the code. I'll change it to the xrootd afterwards so as to read the whole dataset.
 	- Output: `Raw_53_trimmed.root`, `Raw_53_clusterNtuple.root`
 - Analyzer: [SiStripClustersDump.cc](SiStripClustersDump.cc)
 	- InputTag: siStripClusters
