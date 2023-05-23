@@ -29,7 +29,7 @@ process.maxEvents = cms.untracked.PSet(
 )
 
 options = VarParsing.VarParsing ('analysis')
-
+options.parseArguments()
 # Input source
 filename = "/afs/cern.ch/user/y/yuchenc/0518/CMSSW_13_0_6/src/RecoLocalTracker/SiStripClusterizer/data/Raw_53.root" if len(options.inputFiles)==0 else \
            options.inputFiles[0]
@@ -56,7 +56,7 @@ process.outputClusters = cms.OutputModule("PoolOutputModule",
     compressionAlgorithm = cms.untracked.string('ZLIB'),
     compressionLevel = cms.untracked.int32(7),
     eventAutoFlushCompressedSize = cms.untracked.int32(31457280),
-    fileName = cms.untracked.string('file:output/{:s}_clusterTrimmed.root'.format( os.path.basename(filename).strip('.root')) ),
+    fileName = cms.untracked.string('file:output/{:s}_clusterTrimmed.root'.format( os.path.basename(filename)[:-5]) ),
     outputCommands = cms.untracked.vstring(
     'drop *',   
 	'keep *_*siStripClusters*_*_*'   
@@ -64,7 +64,7 @@ process.outputClusters = cms.OutputModule("PoolOutputModule",
 )
 
 process.TFileService = cms.Service("TFileService",
-        fileName=cms.string("output/{:s}_clusterNtuple.root".format( os.path.basename(filename).strip('.root')) ))
+        fileName=cms.string("output/{:s}_clusterNtuple.root".format( os.path.basename(filename)[:-5]) ))
 
 # Additional output definition
 
@@ -82,42 +82,8 @@ process.analyzer_step = cms.Path(process.SiStripClustersDump)
 process.endjob_step = cms.EndPath(process.endOfProcess)
 process.output_step = cms.EndPath(process.outputClusters)
 
-process.load('EventFilter.SiStripRawToDigi.SiStripDigiToRaw_cfi')
-process.rawStep = process.SiStripDigiToRaw.clone(
-InputDigis=cms.InputTag('siStripDigis', 'ZeroSuppressed'),
-RawDataTag = cms.InputTag('StripRawDataCollector')
- )
-
-process.load('EventFilter.RawDataCollector.rawDataCollector_cfi')
-process.StripRawDataCollector = process.rawDataCollector.clone(RawCollectionList = cms.VInputTag( cms.InputTag('rawStep')))
-
-process.load('EventFilter.SiPixelRawToDigi.SiPixelDigiToRaw_cfi')
-process.rawStepPix = process.siPixelRawData.clone(
-InputLabel=cms.InputTag('siPixelDigis'),
- )
-process.PixelRawDataCollector = process.rawDataCollector.clone(RawCollectionList = cms.VInputTag( cms.InputTag('rawStepPix')))
-
-process.load('EventFilter.HcalRawToDigi.HcalDigiToRaw_cfi')
-process.rawStepHCAL = process.hcalRawDataVME.clone(
-    HBHE = cms.untracked.InputTag("hcalDigis"),
-    HF = cms.untracked.InputTag("hcalDigis"),
-    HO = cms.untracked.InputTag("hcalDigis"),
-    ZDC = cms.untracked.InputTag("hcalDigis"),
-    TRIG =  cms.untracked.InputTag("hcalDigis")
-)
-process.HCALRawDataCollector = process.rawDataCollector.clone(RawCollectionList = cms.VInputTag( cms.InputTag('rawStepHCAL')))
-
-process.load('EventFilter.ESDigiToRaw.esDigiToRaw_cfi')
-process.rawStepES = process.esDigiToRaw.clone(
-Label = cms.string('ecalPreshowerDigis'),
-)
-process.ESRawDataCollector = process.rawDataCollector.clone(RawCollectionList = cms.VInputTag( cms.InputTag('rawStepES')))
-
-process.rawPath = cms.Path(process.rawStep*process.rawStepPix*process.rawStepHCAL*process.rawStepES*process.StripRawDataCollector*process.PixelRawDataCollector*process.HCALRawDataCollector*process.ESRawDataCollector)
-
-
 # Schedule definition
-process.schedule = cms.Schedule(process.analyzer_step, process.rawPath, process.endjob_step,process.output_step)
+process.schedule = cms.Schedule(process.analyzer_step, process.endjob_step,process.output_step)
 from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
 associatePatAlgosToolsTask(process)
 
