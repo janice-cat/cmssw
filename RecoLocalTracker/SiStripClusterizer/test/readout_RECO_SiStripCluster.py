@@ -4,8 +4,10 @@
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
 # with command line options: step2 --conditions 103X_dataRun2_Prompt_v2 -s RAW2DIGI,L1Reco,RECO --process reRECO -n 30 --data --era Run2_2018_pp_on_AA --eventcontent AOD --runUnscheduled --scenario pp --datatier AOD --repacked --filein file:out.root --fileout file:step2.root --no_exec
 import FWCore.ParameterSet.Config as cms
-
+import FWCore.ParameterSet.VarParsing as VarParsing
 from Configuration.StandardSequences.Eras import eras
+
+import os
 
 process = cms.Process('reRECO3',eras.Run2_2018_pp_on_AA)
 
@@ -26,9 +28,13 @@ process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(10)
 )
 
+options = VarParsing.VarParsing ('analysis')
+
 # Input source
+filename = "/afs/cern.ch/user/y/yuchenc/0518/CMSSW_13_0_6/src/RecoLocalTracker/SiStripClusterizer/data/Raw_53.root" if len(options.inputFiles)==0 else \
+           options.inputFiles[0]
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring('file:/afs/cern.ch/user/y/yuchenc/0518/CMSSW_13_0_6/src/RecoLocalTracker/SiStripClusterizer/data/Raw_53.root'),
+    fileNames = cms.untracked.vstring('file:'+filename),
     secondaryFileNames = cms.untracked.vstring()
 )
 
@@ -44,12 +50,13 @@ process.configurationMetadata = cms.untracked.PSet(
 )
 
 # Output definition
+if (not os.path.exists('output/')): os.makedirs('output/')
 
 process.outputClusters = cms.OutputModule("PoolOutputModule",
     compressionAlgorithm = cms.untracked.string('ZLIB'),
     compressionLevel = cms.untracked.int32(7),
     eventAutoFlushCompressedSize = cms.untracked.int32(31457280),
-    fileName = cms.untracked.string('file:Raw_53_trimmed.root'),
+    fileName = cms.untracked.string('file:output/{:s}_clusterTrimmed.root'.format( os.path.basename(filename).strip('.root')) ),
     outputCommands = cms.untracked.vstring(
     'drop *',   
 	'keep *_*siStripClusters*_*_*'   
@@ -57,7 +64,7 @@ process.outputClusters = cms.OutputModule("PoolOutputModule",
 )
 
 process.TFileService = cms.Service("TFileService",
-        fileName=cms.string("Raw_53_clusterNtuple.root"))
+        fileName=cms.string("output/{:s}_clusterNtuple.root".format( os.path.basename(filename).strip('.root')) ))
 
 # Additional output definition
 

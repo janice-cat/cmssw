@@ -48,9 +48,9 @@ private:
   edm::Service<TFileService> fs;
 
   uint32_t detId;
-  uint16_t barycenter;
-  uint16_t width;
-  uint8_t avCharge;
+  cms_uint16_t barycenter;
+  cms_uint8_t width;
+  cms_uint8_t avCharge;
   edm::EventNumber_t eventN;
 };
 
@@ -63,7 +63,7 @@ SiStripApproximatedClustersDump::SiStripApproximatedClustersDump(const edm::Para
   outNtuple = fs->make<TTree>("ApproxClusters", "ApproxClusters");
   outNtuple->Branch("event", &eventN, "event/i");
   outNtuple->Branch("detId", &detId, "detId/i");
-  outNtuple->Branch("barycenter", &barycenter, "barycenter/F");
+  outNtuple->Branch("barycenter", &barycenter, "barycenter/s");
   outNtuple->Branch("width", &width, "width/b");
   outNtuple->Branch("charge", &avCharge, "charge/b");
 }
@@ -88,7 +88,7 @@ void SiStripApproximatedClustersDump::analyze(const edm::Event& event, const edm
 
 void SiStripApproximatedClustersDump::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
   edm::ParameterSetDescription desc;
-  desc.add<edm::InputTag>("approxSiStripClustersTag", edm::InputTag("SiStripClusters2ApproxClusters"));
+  desc.add<edm::InputTag>("approxSiStripClustersTag", edm::InputTag("hltSiStripClusters2ApproxClusters"));
   descriptions.add("SiStripApproximatedClustersDump", desc);
 }
 
