@@ -49,7 +49,7 @@ private:
 
   uint32_t detId;
   float barycenter;
-  // uint16_t width;
+  uint16_t width;
   int charge;
   edm::EventNumber_t eventN;
 };
@@ -64,7 +64,7 @@ SiStripClustersDump::SiStripClustersDump(const edm::ParameterSet& conf) {
   outNtuple->Branch("event", &eventN, "event/i");
   outNtuple->Branch("detId", &detId, "detId/i");
   outNtuple->Branch("barycenter", &barycenter, "barycenter/F");
-  // outNtuple->Branch("width", &width, "width/b");
+  outNtuple->Branch("width", &width, "width/s");
   outNtuple->Branch("charge", &charge, "charge/I");
 }
 
@@ -79,7 +79,8 @@ void SiStripClustersDump::analyze(const edm::Event& event, const edm::EventSetup
 
     for (const auto& cluster : detClusters) {
       barycenter = cluster.barycenter();
-      // width = cluster.width();
+      // std::cout << barycenter << ", " << cluster.barycenter() << std::endl;
+      width = cluster.size();
       charge = cluster.charge();
       outNtuple->Fill();
     }

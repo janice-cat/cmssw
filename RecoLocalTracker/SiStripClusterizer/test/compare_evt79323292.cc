@@ -60,22 +60,26 @@ void compare_evt79323292()
 	_  = (TDirectoryFile*) rawp_c->Get("SiStripClustersDump");
 	TTree* t_rp_c  = (TTree*) _->Get("clusters");
 	
-	TFile* rawp_ac = TFile::Open("output/step3_RAW2DIGI_L1Reco_RECO_rawprime_run362321_evt79323292_approxClusterNtuple.root", "read");
+	TFile* rawp_ac = TFile::Open("output/repack_REPACK_approxClusterNtuple.root", "read");
 	_  = (TDirectoryFile*) rawp_ac->Get("SiStripApproximatedClustersDump");
 	TTree* t_rp_ac = (TTree*) _->Get("ApproxClusters");
 
 	float barycenter_r_c;
+	uint16_t  width_r_c;
 	int   charge_r_c;
 	float barycenter_rp_c;
+	uint16_t  width_rp_c;
 	int   charge_rp_c;
 	uint16_t barycenter_rp_ac;
 	uint8_t  width_rp_ac;
 	uint8_t  charge_rp_ac;
 
 	t_r_c->SetBranchAddress("barycenter", &barycenter_r_c);
+	t_r_c->SetBranchAddress("width", &width_r_c);
 	t_r_c->SetBranchAddress("charge", &charge_r_c);
 
 	t_rp_c->SetBranchAddress("barycenter", &barycenter_rp_c);
+	t_rp_c->SetBranchAddress("width", &width_rp_c);
 	t_rp_c->SetBranchAddress("charge", &charge_rp_c);
 	
 	t_rp_ac->SetBranchAddress("barycenter", &barycenter_rp_ac);
@@ -84,18 +88,22 @@ void compare_evt79323292()
 	
 	TH1D* h_barycenter_r_c = new TH1D( "h_barycenter_r_c", "RAW; barycenter; count", 40, 0, 950);
 	TH1D* h_charge_r_c = new TH1D( "h_charge_r_c", "RAW; charge; count", 40, 0, 700);
+	TH1D* h_width_r_c = new TH1D( "h_width_r_c", "RAW; width; count", 40, 0, 20);
 
 	TH1D* h_barycenter_rp_c = new TH1D( "h_barycenter_rp_c", "RAW'; barycenter; count", 40, 0, 950);
 	TH1D* h_charge_rp_c = new TH1D( "h_charge_rp_c", "RAW'; charge; count", 40, 0, 700);
+	TH1D* h_width_rp_c = new TH1D( "h_width_rp_c", "RAW'; width; count", 40, 0, 20);
 
 	TH1D* h_barycenter_rp_ac = new TH1D( "h_barycenter_rp_ac", "RAW' from approxCluster; barycenter; count", 40, 0, 950);
 	TH1D* h_charge_rp_ac = new TH1D( "h_charge_rp_ac", "RAW' from approxCluster; charge; count", 40, 0, 700);
+	TH1D* h_width_rp_ac = new TH1D( "h_width_rp_ac", "RAW' from approxCluster; width; count", 40, 0, 20);
 
 	for (int i = 0; i < t_r_c->GetEntries(); ++i)
 	{
 		t_r_c->GetEntry(i);
 		h_barycenter_r_c->Fill(barycenter_r_c);
 		h_charge_r_c->Fill(charge_r_c);
+		h_width_r_c->Fill(width_r_c);
 	}
 
 	for (int i = 0; i < t_rp_c->GetEntries(); ++i)
@@ -103,6 +111,7 @@ void compare_evt79323292()
 		t_rp_c->GetEntry(i);
 		h_barycenter_rp_c->Fill(barycenter_rp_c);
 		h_charge_rp_c->Fill(charge_rp_c);
+		h_width_rp_c->Fill(width_rp_c);
 	}
 
 	for (int i = 0; i < t_rp_ac->GetEntries(); ++i)
@@ -110,6 +119,7 @@ void compare_evt79323292()
 		t_rp_ac->GetEntry(i);
 		h_barycenter_rp_ac->Fill(barycenter_rp_ac/10.);
 		h_charge_rp_ac->Fill(width_rp_ac*charge_rp_ac);
+		h_width_rp_ac->Fill(width_rp_ac);
 	}
 
 
@@ -125,7 +135,7 @@ void compare_evt79323292()
 	h_barycenter_rp_ac->SetFillColorAlpha(kOrange+1, 0.2);
 	
 	h_barycenter_r_c->Draw("hist");
-	h_barycenter_rp_c->Draw("hist same");
+	// h_barycenter_rp_c->Draw("hist same");
 	h_barycenter_rp_ac->Draw("hist same");
 	h_barycenter_r_c->GetYaxis()->SetRangeUser(0, h_barycenter_r_c->GetMaximum()*1.5);
 
@@ -144,7 +154,7 @@ void compare_evt79323292()
 	h_charge_rp_ac->SetFillColorAlpha(kOrange+1, 0.2);
 	
 	h_charge_r_c->Draw("hist");
-	h_charge_rp_c->Draw("hist same");
+	// h_charge_rp_c->Draw("hist same");
 	h_charge_rp_ac->Draw("hist same");
 	h_charge_r_c->GetYaxis()->SetRangeUser(0, h_charge_r_c->GetMaximum()*1.2);
 
@@ -153,6 +163,26 @@ void compare_evt79323292()
 
 	c->SaveAs("img/charge_evt79323292.pdf");
 	system("dropbox_uploader.sh upload img/charge_evt79323292.pdf /tmp/");
+
+
+	PlotStyle(h_width_r_c); h_width_r_c->SetStats(0);
+	PlotStyle(h_width_rp_c); h_width_rp_c->SetStats(0);
+	PlotStyle(h_width_rp_ac); h_width_rp_ac->SetStats(0);
+	h_width_r_c->SetLineColor(kAzure+2);
+	h_width_rp_c->SetLineColor(kOrange+1);
+	h_width_rp_ac->SetLineColorAlpha(kOrange+1, 0.0);
+	h_width_rp_ac->SetFillColorAlpha(kOrange+1, 0.2);
+	
+	h_width_r_c->Draw("hist");
+	// h_width_rp_c->Draw("hist same");
+	h_width_rp_ac->Draw("hist same");
+	h_width_r_c->GetYaxis()->SetRangeUser(0, h_width_r_c->GetMaximum()*1.2);
+
+	leg = c->BuildLegend(0.45,0.70,0.93,0.94);
+	formatLegend(leg, 0.040);
+
+	c->SaveAs("img/width_evt79323292.pdf");
+	system("dropbox_uploader.sh upload img/width_evt79323292.pdf /tmp/");
 
 	delete c;
 
