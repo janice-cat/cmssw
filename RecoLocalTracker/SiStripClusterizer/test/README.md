@@ -30,3 +30,11 @@ root [2] ApproxClusters->Draw("barycenter")
 root [3] ApproxClusters->Draw("charge")
 root [4] .q
 ```
+
+- For event 79323292:
+```bash
+cmsRun readout_RECO_SiStripCluster.py inputFiles=/afs/cern.ch/work/m/mnguyen/public/prod/CMSSW_12_5_2/src/rawprime/raw_RAW2DIGI_L1Reco_RECO_run362321_evt79323292.root
+cmsRun readout_RECO_SiStripCluster.py inputFiles=/afs/cern.ch/work/m/mnguyen/public/prod/CMSSW_12_5_2/src/rawprime/step3_RAW2DIGI_L1Reco_RECO_rawprime_run362321_evt79323292.root
+cmsRun readout_RECO_SiStripApproxCluster.py inputFiles=/afs/cern.ch/work/m/mnguyen/public/prod/CMSSW_12_5_2/src/rawprime/step3_RAW2DIGI_L1Reco_RECO_rawprime_run362321_evt79323292.root
+cmsRun readout_RECO_SiStripApproxCluster.py inputFiles=/afs/cern.ch/work/m/mnguyen/public/prod/CMSSW_12_5_2/src/rawprime/repack_REPACK.root
+```
