@@ -52,15 +52,15 @@ void formatLegend(TLegend* leg, double textsize=0.055)
 void compare_evt79323292()
 {
 	TDirectoryFile* _;
-	TFile* raw_c   = TFile::Open("output/raw_RAW2DIGI_L1Reco_RECO_run362321_evt79323292_clusterNtuple.root", "read");
+	TFile* raw_c   = TFile::Open("../output/raw_RAW2DIGI_L1Reco_RECO_run362321_evt79323292_clusterNtuple.root", "read");
 	_  = (TDirectoryFile*) raw_c->Get("SiStripClustersDump");
 	TTree* t_r_c   = (TTree*) _->Get("clusters");
 	
-	TFile* rawp_c  = TFile::Open("output/step3_RAW2DIGI_L1Reco_RECO_rawprime_run362321_evt79323292_clusterNtuple.root", "read");
+	TFile* rawp_c  = TFile::Open("../output/step3_RAW2DIGI_L1Reco_RECO_rawprime_run362321_evt79323292_clusterNtuple.root", "read");
 	_  = (TDirectoryFile*) rawp_c->Get("SiStripClustersDump");
 	TTree* t_rp_c  = (TTree*) _->Get("clusters");
 	
-	TFile* rawp_ac = TFile::Open("output/repack_REPACK_approxClusterNtuple.root", "read");
+	TFile* rawp_ac = TFile::Open("../output/repack_REPACK_approxClusterNtuple.root", "read");
 	_  = (TDirectoryFile*) rawp_ac->Get("SiStripApproximatedClustersDump");
 	TTree* t_rp_ac = (TTree*) _->Get("ApproxClusters");
 
@@ -142,8 +142,8 @@ void compare_evt79323292()
 	TLegend* leg = c->BuildLegend(0.45,0.70,0.93,0.94);
 	formatLegend(leg, 0.040);
 
-	c->SaveAs("img/barycenter_evt79323292.pdf");
-	system("dropbox_uploader.sh upload img/barycenter_evt79323292.pdf /tmp/");
+	c->SaveAs("../img/barycenter_evt79323292.pdf");
+	system("dropbox_uploader.sh upload ../img/barycenter_evt79323292.pdf /tmp/");
 
 	PlotStyle(h_charge_r_c); h_charge_r_c->SetStats(0);
 	PlotStyle(h_charge_rp_c); h_charge_rp_c->SetStats(0);
@@ -161,8 +161,8 @@ void compare_evt79323292()
 	leg = c->BuildLegend(0.45,0.70,0.93,0.94);
 	formatLegend(leg, 0.040);
 
-	c->SaveAs("img/charge_evt79323292.pdf");
-	system("dropbox_uploader.sh upload img/charge_evt79323292.pdf /tmp/");
+	c->SaveAs("../img/charge_evt79323292.pdf");
+	system("dropbox_uploader.sh upload ../img/charge_evt79323292.pdf /tmp/");
 
 
 	PlotStyle(h_width_r_c); h_width_r_c->SetStats(0);
@@ -181,8 +181,8 @@ void compare_evt79323292()
 	leg = c->BuildLegend(0.45,0.70,0.93,0.94);
 	formatLegend(leg, 0.040);
 
-	c->SaveAs("img/width_evt79323292.pdf");
-	system("dropbox_uploader.sh upload img/width_evt79323292.pdf /tmp/");
+	c->SaveAs("../img/width_evt79323292.pdf");
+	system("dropbox_uploader.sh upload ../img/width_evt79323292.pdf /tmp/");
 
 	delete c;
 
