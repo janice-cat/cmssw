@@ -8,7 +8,7 @@
 #include "DataFormats/Common/interface/DetSet.h"
 #include "DataFormats/Common/interface/DetSetVector.h"
 #include "DataFormats/Common/interface/DetSetVectorNew.h"
-#include "DataFormats/SiStripCluster/interface/SiStripApproximateCluster.h"
+#include "DataFormats/SiStripCluster/interface/SiStripCluster.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
@@ -31,10 +31,10 @@
 // class decleration
 //
 
-class SiStripApproximatedClustersDump : public edm::one::EDAnalyzer<edm::one::SharedResources> {
+class SiStripClustersDump : public edm::one::EDAnalyzer<edm::one::SharedResources> {
 public:
-  explicit SiStripApproximatedClustersDump(const edm::ParameterSet&);
-  ~SiStripApproximatedClustersDump() override;
+  explicit SiStripClustersDump(const edm::ParameterSet&);
+  ~SiStripClustersDump() override;
 
   static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
 
@@ -42,36 +42,36 @@ private:
   void analyze(const edm::Event&, const edm::EventSetup&) override;
 
   edm::InputTag inputTagClusters;
-  edm::EDGetTokenT<edmNew::DetSetVector<SiStripApproximateCluster>> clusterToken;
+  edm::EDGetTokenT<edmNew::DetSetVector<SiStripCluster>> clusterToken;
 
   TTree* outNtuple;
   edm::Service<TFileService> fs;
 
   uint32_t detId;
-  cms_uint16_t barycenter;
-  cms_uint8_t width;
-  cms_uint8_t avCharge;
+  float barycenter;
+  uint16_t width;
+  int charge;
   edm::EventNumber_t eventN;
 };
 
-SiStripApproximatedClustersDump::SiStripApproximatedClustersDump(const edm::ParameterSet& conf) {
-  inputTagClusters = conf.getParameter<edm::InputTag>("approxSiStripClustersTag");
-  clusterToken = consumes<edmNew::DetSetVector<SiStripApproximateCluster>>(inputTagClusters);
+SiStripClustersDump::SiStripClustersDump(const edm::ParameterSet& conf) {
+  inputTagClusters = conf.getParameter<edm::InputTag>("SiStripClustersTag");
+  clusterToken = consumes<edmNew::DetSetVector<SiStripCluster>>(inputTagClusters);
 
   usesResource("TFileService");
 
-  outNtuple = fs->make<TTree>("ApproxClusters", "ApproxClusters");
+  outNtuple = fs->make<TTree>("clusters", "clusters");
   outNtuple->Branch("event", &eventN, "event/i");
   outNtuple->Branch("detId", &detId, "detId/i");
-  outNtuple->Branch("barycenter", &barycenter, "barycenter/s");
-  outNtuple->Branch("width", &width, "width/b");
-  outNtuple->Branch("charge", &avCharge, "charge/b");
+  outNtuple->Branch("barycenter", &barycenter, "barycenter/F");
+  outNtuple->Branch("width", &width, "width/s");
+  outNtuple->Branch("charge", &charge, "charge/I");
 }
 
-SiStripApproximatedClustersDump::~SiStripApproximatedClustersDump() = default;
+SiStripClustersDump::~SiStripClustersDump() = default;
 
-void SiStripApproximatedClustersDump::analyze(const edm::Event& event, const edm::EventSetup& es) {
-  edm::Handle<edmNew::DetSetVector<SiStripApproximateCluster>> clusterCollection = event.getHandle(clusterToken);
+void SiStripClustersDump::analyze(const edm::Event& event, const edm::EventSetup& es) {
+  edm::Handle<edmNew::DetSetVector<SiStripCluster>> clusterCollection = event.getHandle(clusterToken);
 
   for (const auto& detClusters : *clusterCollection) {
     detId = detClusters.detId();
@@ -79,18 +79,19 @@ void SiStripApproximatedClustersDump::analyze(const edm::Event& event, const edm
 
     for (const auto& cluster : detClusters) {
       barycenter = cluster.barycenter();
-      width = cluster.width();
-      avCharge = cluster.avgCharge();
+      // std::cout << barycenter << ", " << cluster.barycenter() << std::endl;
+      width = cluster.size();
+      charge = cluster.charge();
       outNtuple->Fill();
     }
   }
 }
 
-void SiStripApproximatedClustersDump::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
+void SiStripClustersDump::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
   edm::ParameterSetDescription desc;
-  desc.add<edm::InputTag>("approxSiStripClustersTag", edm::InputTag("hltSiStripClusters2ApproxClusters"));
-  descriptions.add("SiStripApproximatedClustersDump", desc);
+  desc.add<edm::InputTag>("SiStripClustersTag", edm::InputTag("siStripClusters"));
+  descriptions.add("SiStripClustersDump", desc);
 }
 
 #include "FWCore/Framework/interface/MakerMacros.h"
-DEFINE_FWK_MODULE(SiStripApproximatedClustersDump);
+DEFINE_FWK_MODULE(SiStripClustersDump);
