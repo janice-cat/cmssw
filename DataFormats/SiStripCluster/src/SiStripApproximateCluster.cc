@@ -4,7 +4,6 @@
 #include <cmath>
 
 SiStripApproximateCluster::SiStripApproximateCluster(const SiStripCluster& cluster, unsigned int maxNSat) {
-  printf("[SSA] %f %ld %d\n", cluster.barycenter(), cluster.size(), cluster.charge() );
   barycenter_ = std::round(cluster.barycenter() * 10);
   width_ = cluster.size();
   avgCharge_ = cluster.charge() / cluster.size();

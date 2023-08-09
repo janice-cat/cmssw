@@ -23,17 +23,10 @@ SiStripCluster::SiStripCluster(const SiStripDigiRange& range) : firstStrip_(rang
 }
 
 SiStripCluster::SiStripCluster(const SiStripApproximateCluster cluster, const uint16_t maxStrips) : error_x(-99999.9) {
-  printf("[SS] %d %d %d\n", cluster.barycenter(), cluster.width(), cluster.avgCharge() );
-  if (abs(cluster.barycenter()-2765)<0.2) 
-  {
-    barycenter_ = 276.5336;
-    charge_ = 119; 
-  } else {
-    barycenter_ = cluster.barycenter() / 10.0;
-    charge_ = cluster.width() * cluster.avgCharge();
-  }
-
+  barycenter_ = cluster.barycenter() / 10.0;
+  charge_ = cluster.width() * cluster.avgCharge();
   amplitudes_.resize(cluster.width(), cluster.avgCharge());
+
   float halfwidth_ = 0.5f * float(cluster.width());
 
   //initialize firstStrip_
@@ -42,18 +35,6 @@ SiStripCluster::SiStripCluster(const SiStripApproximateCluster cluster, const ui
   if UNLIKELY (firstStrip_ + cluster.width() > maxStrips) {
     firstStrip_ = maxStrips - cluster.width();
   }
-  printf("[SS:2] %f %ld %d\n", barycenter_, amplitudes_.size(), charge_ );
-  int sumx = 0;
-  int suma = 0;
-  auto asize = size();
-  for (auto i = 0U; i < asize; ++i) {
-    sumx += i * amplitudes_[i];
-    suma += amplitudes_[i];
-  }
-  std::cout << "firstStrip_ " << firstStrip_ << " barycenter() "  <<
-    float((firstStrip_ & stripIndexMask)) + float(sumx) / float(suma) + 0.5 << std::endl;
-  for(uint8_t a: amplitudes_) std::cout << (int) a << ", ";
-  std::cout << std::endl;
 }
 
 int SiStripCluster::charge() const {
