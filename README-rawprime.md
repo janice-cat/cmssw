@@ -56,3 +56,17 @@ cmsRun run_trkAna.py
 - Note: parse the input file [here](https://github.com/CmsHI/rawprime/blob/main/HITrackingStudies/HITrackingStudies/run_trkAna.py#L26)
 
 
+## [Ongoing] track-level checks: online RAW v.s. offline RAW' + [PR #42475](https://github.com/cms-sw/cmssw/pull/42475)
+```bash
+### get the new offline FEVT level file
+cd RecoLocalTracker/SiStripClusterizer/test/
+cmsRun repack_REPACK_study0809.py
+##### I did a stupid event filtering, which could be made more general: https://github.com/janice-cat/cmssw/blob/d4165cb5f207ca0b7301d8b5e9f521b670c2c17b/RecoLocalTracker/SiStripClusterizer/test/repack_REPACK_study0809.py#L36-L153
+##### Need to specify by hand: https://github.com/janice-cat/cmssw/blob/d4165cb5f207ca0b7301d8b5e9f521b670c2c17b/RecoLocalTracker/SiStripClusterizer/test/repack_REPACK_study0809.py#L31-L33
+cmsRun rawprime_RAW2DIGI_L1Reco_RECO_study0809.py
+##### Need to specify by hand: https://github.com/janice-cat/cmssw/blob/mydev-CMSSW_12_5_2/RecoLocalTracker/SiStripClusterizer/test/rawprime_RAW2DIGI_L1Reco_RECO_study0809.py#L31-L33
+
+### get the new offline trackTree
+cd HITrackingStudies/HITrackingStudies/test/
+cmsRun run_trkAna.py
+```
