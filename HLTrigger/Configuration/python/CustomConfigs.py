@@ -223,3 +223,19 @@ def L1XML(process,xmlFile=None):
     process.ESPreferL1TXML = cms.ESPrefer("L1TUtmTriggerMenuESProducer","L1TriggerMenu")
 
     return process
+
+def customiseHLTforHIonRepackedRAW(process):
+    '''
+    Customise a HLT menu to run on the repacked RAW data
+    produced at HLT during Heavy-Ion data-taking (collection: "rawDataRepacker")
+      - replace "rawDataCollector" with "rawDataRepacker::@skipCurrentProcess"
+    '''
+    MassReplaceInputTag(
+        process = process,
+        old = 'rawDataCollector',
+        new = 'rawDataRepacker::@skipCurrentProcess',
+        verbose = False,
+        moduleLabelOnly = False,
+        skipLabelTest = False
+    )
+    return process
