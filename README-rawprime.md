@@ -67,6 +67,10 @@ cmsRun rawprime_RAW2DIGI_L1Reco_RECO_study0809.py
 ##### Need to specify by hand: https://github.com/janice-cat/cmssw/blob/mydev-CMSSW_12_5_2/RecoLocalTracker/SiStripClusterizer/test/rawprime_RAW2DIGI_L1Reco_RECO_study0809.py#L31-L33
 
 ### get the new offline trackTree
+##### I just added HITrackingStudies to THIS repo, which might make sharing codes easier 
 cd HITrackingStudies/HITrackingStudies/test/
 cmsRun run_trkAna.py
+##### Need to specify by hand: https://github.com/janice-cat/cmssw/blob/6fc7bb0c635a06b7ce30995768a9efa95ad0b412/HITrackingStudies/HITrackingStudies/test/run_trkAna.py#L11-L15
+
+### One can plot the track-level variables from trackTree outputs, e.g. trk_raw_15.root (online raw), trk_newPR.root (offline RAW' + PR #42475) 
 ```
