@@ -78,7 +78,8 @@ cmsRun run_trkAna.py
     # in output/: testDQM_siStripClusters.root, testDQM_hltSiStripClusterizerForRaw.root 
     ```
 
-## ~[Closed] track-level checks: online RAW v.s. offline RAW' + [PR #42475](https://github.com/cms-sw/cmssw/pull/42475)~
+## Track-level checks: online RAW v.s. offline RAW' + [PR #42475](https://github.com/cms-sw/cmssw/pull/42475)
+### ~[Closed] Leading order difference: FED errors in trajectory building module~
 ```bash
 ### get the new offline FEVT level file
 cd RecoLocalTracker/SiStripClusterizer/test/
@@ -96,3 +97,4 @@ cmsRun run_trkAna.py
 
 ### One can plot the track-level variables from trackTree outputs, e.g. trk_raw_15.root (online raw), trk_newPR.root (offline RAW' + PR #42475) 
 ```
+### [Ongoing] Checking residual tracking difference
