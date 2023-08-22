@@ -55,8 +55,30 @@ cmsRun run_trkAna.py
 ```
 - Note: parse the input file [here](https://github.com/CmsHI/rawprime/blob/main/HITrackingStudies/HITrackingStudies/run_trkAna.py#L26)
 
+## [Ongoing] cluster-level matching check:
+- Dataset:
+  `/HITestRaw6/HIRun2022A-v1/RAW`
+- RAW' clusters from HLT workflow (from the menu of `/afs/cern.ch/user/y/yuchenc/rawprime_cmssw/CMSSW_12_5_2/src/RecoLocalTracker/SiStripClusterizer/test/output/raw_check2events.root`) on release `CMSSW_12_5_2`
+  ```bash
+  cd HLTrigger/Configuration/test/
+  # hltGetConfiguration run:362321 --globaltag 124X_dataRun3_HLT_v7 --process reHLT --data --unprescale --input file:/afs/cern.ch/user/y/yuchenc/rawprime_cmssw/CMSSW_12_5_2/src/RecoLocalTracker/SiStripClusterizer/test/output/raw_check2events.root --output all --customise HLTrigger/Configuration/CustomConfigs.customiseHLTforHIonRepackedRAW > hlt.py
+  # hlt.py is modified, in order to store the siStripClusters branch
+  cmsRun hlt.py
+  # After running hlt.py, there will be an output outputDQM.root, which contains branches:
+  # SiStripClusteredmNewDetSetVector_hltSiStripClusterizerForRawPrime__reHLT. 86233 49920
+  # SiStripApproximateClusteredmNewDetSetVector_hltSiStripClusters2ApproxClusters__reHLT. 57691 43246
+  # SiStripClusteredmNewDetSetVector_siStripClusters__reRECO1. 94444 30522
+  ```
+- Analyze the `outputDQM.root`:
+  - The [DQM.SiStripMonitorApproximateCluster tool](https://github.com/cms-sw/cmssw/tree/master/DQM/SiStripMonitorApproximateCluster) is on a later release, so switching to [CMSSW v13](https://github.com/janice-cat/cmssw/tree/mydev-CMSSW_13_0_6/DQMServices/Examples/python/test/DQM_step1.py) to run the following commands:
+    ```bash
+    cd DQMServices/Examples/python/test/
+    cmsRun DQM_step1.py
+    # changing in L34-L35 to specify the name of the raw cluster collection to do the comparison
+    # in output/: testDQM_siStripClusters.root, testDQM_hltSiStripClusterizerForRaw.root 
+    ```
 
-## [Ongoing] track-level checks: online RAW v.s. offline RAW' + [PR #42475](https://github.com/cms-sw/cmssw/pull/42475)
+## ~[Closed] track-level checks: online RAW v.s. offline RAW' + [PR #42475](https://github.com/cms-sw/cmssw/pull/42475)~
 ```bash
 ### get the new offline FEVT level file
 cd RecoLocalTracker/SiStripClusterizer/test/
