@@ -2879,19 +2879,20 @@ process.hltOutputDQM = cms.OutputModule( "PoolOutputModule",
         dataTier = cms.untracked.string( "RAW" )
     ),
     SelectEvents = cms.untracked.PSet(  SelectEvents = cms.vstring( 'Dataset_OnlineMonitor' ) ),
-    outputCommands = cms.untracked.vstring( 'drop *',
-      'keep *_hltOnlineBeamSpot_*_*',
-      'keep *_hltPixelTracks_*_*',
-      'keep *_hltSiPixelClusters_*_*',
-      'keep FEDRawDataCollection_rawDataCollector_*_*',
-      'keep FEDRawDataCollection_source_*_*',
-      'keep GlobalObjectMapRecord_hltGtStage2ObjectMap_*_*',
-      'keep *_hltSiStripClusterizerForRawPrime_*_*',
-      'keep *_siStripZeroSuppression_*_*',
-      'keep *_siStripClusters_*_*',
-      'keep *_hltSiStripClusters2ApproxClusters_*_*',
-      'keep edmTriggerResults_*_*_*',
-      'keep triggerTriggerEvent_*_*_*' )
+    outputCommands = cms.untracked.vstring( 'keep *',
+      # 'keep *_hltOnlineBeamSpot_*_*',
+      # 'keep *_hltPixelTracks_*_*',
+      # 'keep *_hltSiPixelClusters_*_*',
+      # 'keep FEDRawDataCollection_rawDataCollector_*_*',
+      # 'keep FEDRawDataCollection_source_*_*',
+      # 'keep GlobalObjectMapRecord_hltGtStage2ObjectMap_*_*',
+      # 'keep *_hltSiStripClusterizerForRawPrime_*_*',
+      # 'keep *_siStripZeroSuppression_*_*',
+      # 'keep *_siStripClusters_*_*',
+      # 'keep *_hltSiStripClusters2ApproxClusters_*_*',
+      # 'keep edmTriggerResults_*_*_*',
+      # 'keep triggerTriggerEvent_*_*_*' 
+      )
 )
 process.hltOutputDQMCalibration = cms.OutputModule( "PoolOutputModule",
     fileName = cms.untracked.string( "outputDQMCalibration.root" ),
@@ -3052,6 +3053,15 @@ process.schedule = cms.Schedule( *(process.HLTriggerFirstPath, process.Status_On
 process.source = cms.Source( "PoolSource",
     fileNames = cms.untracked.vstring(
         '/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/813/00000/041AFBC1-FAF8-F240-BCEC-BEBE2FB67A32.root',
+        '/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/822/00000/1BFB3A43-32A2-8448-BCC8-DA71CD30B2C3.root',
+        '/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/822/00000/51223A67-B0D8-1B43-8679-AFD45ECF25A3.root',
+        '/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/823/00000/D7E28CEA-BF44-FE4D-A29B-76E64814F30B.root',
+        '/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/823/00000/F21FB5BC-C781-4D4F-AA41-3C3FDA4A175D.root',
+        '/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/828/00000/089F9067-4DE9-0E47-8A64-64C738979DB7.root',
+        '/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/828/00000/FCBE1E24-F6CC-BA4B-A97C-1ADB26961997.root',
+        '/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/830/00000/17156B74-CC0C-AB49-9A9A-3C7F5422CD7E.root',
+        '/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/830/00000/3D4814AB-80BB-8848-8D0C-891D3C7E4775.root',
+        '/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/830/00000/750861D3-FCF5-6B4A-8BA5-26E735F6C82D.root'
     ),
     inputCommands = cms.untracked.vstring(
         'keep *'
@@ -3060,7 +3070,7 @@ process.source = cms.Source( "PoolSource",
 
 # limit the number of events to be processed
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32( 1 )
+    input = cms.untracked.int32( 100000 )
 )
 
 # enable TrigReport, TimeReport and MultiThreading
@@ -3091,9 +3101,18 @@ _customInfo['globalTags'][False] = "auto:run3_mc_GRun"
 _customInfo['inputFiles']={}
 _customInfo['inputFiles'][True]  = "file:RelVal_Raw_GRun_DATA.root"
 _customInfo['inputFiles'][False] = "file:RelVal_Raw_GRun_MC.root"
-_customInfo['maxEvents' ]=  1
+_customInfo['maxEvents' ]=  100000
 _customInfo['globalTag' ]= "132X_dataRun3_HLT_v2"
-_customInfo['inputFile' ]=  ['/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/813/00000/041AFBC1-FAF8-F240-BCEC-BEBE2FB67A32.root']
+_customInfo['inputFile'] = ['/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/813/00000/041AFBC1-FAF8-F240-BCEC-BEBE2FB67A32.root',
+                            '/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/822/00000/1BFB3A43-32A2-8448-BCC8-DA71CD30B2C3.root',
+                            '/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/822/00000/51223A67-B0D8-1B43-8679-AFD45ECF25A3.root',
+                            '/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/823/00000/D7E28CEA-BF44-FE4D-A29B-76E64814F30B.root',
+                            '/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/823/00000/F21FB5BC-C781-4D4F-AA41-3C3FDA4A175D.root',
+                            '/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/828/00000/089F9067-4DE9-0E47-8A64-64C738979DB7.root',
+                            '/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/828/00000/FCBE1E24-F6CC-BA4B-A97C-1ADB26961997.root',
+                            '/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/830/00000/17156B74-CC0C-AB49-9A9A-3C7F5422CD7E.root',
+                            '/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/830/00000/3D4814AB-80BB-8848-8D0C-891D3C7E4775.root',
+                            '/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/830/00000/750861D3-FCF5-6B4A-8BA5-26E735F6C82D.root']
 _customInfo['realData'  ]=  True
 
 from HLTrigger.Configuration.customizeHLTforALL import customizeHLTforAll
