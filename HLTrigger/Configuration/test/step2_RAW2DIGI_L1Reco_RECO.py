@@ -2,7 +2,7 @@
 # using: 
 # Revision: 1.19 
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
-# with command line options: step2 --conditions 103X_dataRun2_Prompt_v2 -s RAW2DIGI,L1Reco,RECO --process reRECO -n 30 --data --era Run2_2018_pp_on_AA --eventcontent AOD --runUnscheduled --scenario pp --datatier AOD --repacked --filein file:out.root --fileout file:step2.root --no_exec
+# with command line options: step2 --conditions auto:run2_data_promptlike_hi -s RAW2DIGI,L1Reco,RECO --datatier HLTDEBUG --eventcontent FEVTDEBUGHLT --data --process reRECO --scenario pp -n 10 --repacked --era Run2_2018_pp_on_AA --customise Configuration/DataProcessing/RecoTLR.customisePostEra_Run2_2018_pp_on_AA
 import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 from Configuration.Eras.Era_Run2_2018_pp_on_AA_cff import Run2_2018_pp_on_AA
@@ -23,13 +23,14 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(100000)
+    input = cms.untracked.int32(10),
+    output = cms.optional.untracked.allowed(cms.int32,cms.PSet)
 )
 
 options = VarParsing.VarParsing ('analysis')
 options.parseArguments()
 # Input source
-filename = "outputDQM.root" if len(options.inputFiles)==0 else \
+filename = "outputFEVTDEBUGHLT.root" if len(options.inputFiles)==0 else \
            options.inputFiles[0]
 
 process.source = cms.Source("PoolSource",
@@ -71,44 +72,38 @@ process.options = cms.untracked.PSet(
 
 # Production Info
 process.configurationMetadata = cms.untracked.PSet(
-    annotation = cms.untracked.string('step2 nevts:30'),
+    annotation = cms.untracked.string('step2 nevts:10'),
     name = cms.untracked.string('Applications'),
     version = cms.untracked.string('$Revision: 1.19 $')
 )
 
 # Output definition
 
-process.outputClusters = cms.OutputModule("PoolOutputModule",
-    compressionAlgorithm = cms.untracked.string('ZLIB'),
-    compressionLevel = cms.untracked.int32(7),
-    eventAutoFlushCompressedSize = cms.untracked.int32(31457280),
-    fileName = cms.untracked.string('file:step2clusters'+filename.replace('outputDQM','')),
-    outputCommands = cms.untracked.vstring(
-    # 'keep *',   
-    'keep *_hltSiStripClusterizerForRawPrime_*_*',
-    'keep *_siStripZeroSuppression_*_*',
-    'keep *_siStripClusters_*_*',
-    'keep *_hltSiStripClusters2ApproxClusters_*_*'
-    )
+process.FEVTDEBUGHLToutput = cms.OutputModule("PoolOutputModule",
+    dataset = cms.untracked.PSet(
+        dataTier = cms.untracked.string('HLTDEBUG'),
+        filterName = cms.untracked.string('')
+    ),
+    fileName = cms.untracked.string('file:step2_RAW2DIGI_L1Reco_RECO'+filename.replace('outputFEVTDEBUGHLT','')),
+    outputCommands = process.FEVTDEBUGHLTEventContent.outputCommands,
+    splitLevel = cms.untracked.int32(0)
 )
 
 # Additional output definition
 
 # Other statements
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, '132X_dataRun3_HLT_v2', '')
-# process.GlobalTag = GlobalTag(process.GlobalTag, '103X_dataRun2_Prompt_v3', '')
-
+process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_data_promptlike_hi', '')
 
 # Path and EndPath definitions
 process.raw2digi_step = cms.Path(process.RawToDigi)
 process.L1Reco_step = cms.Path(process.L1Reco)
 process.reconstruction_step = cms.Path(process.reconstruction)
 process.endjob_step = cms.EndPath(process.endOfProcess)
-process.output_step = cms.EndPath(process.outputClusters)
+process.FEVTDEBUGHLToutput_step = cms.EndPath(process.FEVTDEBUGHLToutput)
 
 # Schedule definition
-process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step, process.endjob_step,process.output_step)
+process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.endjob_step,process.FEVTDEBUGHLToutput_step)
 from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
 associatePatAlgosToolsTask(process)
 
@@ -127,6 +122,10 @@ process = customisePostEra_Run2_2018_pp_on_AA(process)
 
 
 # Customisation from command line
+process.FEVTDEBUGHLToutput.outputCommands.extend(['keep *_siStripZeroSuppression_*_*'])
+process.FEVTDEBUGHLToutput.outputCommands.extend(['keep recoTracks_*_*_*'])
+process.FEVTDEBUGHLToutput.outputCommands.extend(['keep recoVertexs_*_*_*'])
+process.FEVTDEBUGHLToutput.outputCommands.extend(['keep *_pixelPair*_*_*'])
 
 #Have logErrorHarvester wait for the same EDProducers to finish as those providing data for the OutputModule
 from FWCore.Modules.logErrorHarvester_cff import customiseLogErrorHarvesterUsingOutputCommands
