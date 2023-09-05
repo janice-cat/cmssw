@@ -2879,20 +2879,15 @@ process.hltOutputDQM = cms.OutputModule( "PoolOutputModule",
         dataTier = cms.untracked.string( "RAW" )
     ),
     SelectEvents = cms.untracked.PSet(  SelectEvents = cms.vstring( 'Dataset_OnlineMonitor' ) ),
-    outputCommands = cms.untracked.vstring( 'keep *',
-      # 'keep *_hltOnlineBeamSpot_*_*',
-      # 'keep *_hltPixelTracks_*_*',
-      # 'keep *_hltSiPixelClusters_*_*',
-      # 'keep FEDRawDataCollection_rawDataCollector_*_*',
-      # 'keep FEDRawDataCollection_source_*_*',
-      # 'keep GlobalObjectMapRecord_hltGtStage2ObjectMap_*_*',
-      # 'keep *_hltSiStripClusterizerForRawPrime_*_*',
-      # 'keep *_siStripZeroSuppression_*_*',
-      # 'keep *_siStripClusters_*_*',
-      # 'keep *_hltSiStripClusters2ApproxClusters_*_*',
-      # 'keep edmTriggerResults_*_*_*',
-      # 'keep triggerTriggerEvent_*_*_*' 
-      )
+    outputCommands = cms.untracked.vstring( 'drop *',
+      'keep *_hltOnlineBeamSpot_*_*',
+      'keep *_hltPixelTracks_*_*',
+      'keep *_hltSiPixelClusters_*_*',
+      'keep FEDRawDataCollection_rawDataCollector_*_*',
+      'keep FEDRawDataCollection_source_*_*',
+      'keep GlobalObjectMapRecord_hltGtStage2ObjectMap_*_*',
+      'keep edmTriggerResults_*_*_*',
+      'keep triggerTriggerEvent_*_*_*' )
 )
 process.hltOutputDQMCalibration = cms.OutputModule( "PoolOutputModule",
     fileName = cms.untracked.string( "outputDQMCalibration.root" ),
@@ -2992,6 +2987,18 @@ process.hltOutputRawPrime = cms.OutputModule( "PoolOutputModule",
       'keep edmTriggerResults_*_*_*',
       'keep triggerTriggerEvent_*_*_*' )
 )
+process.load('Configuration.EventContent.EventContent_cff')
+process.hltOutputFEVTDEBUGHLT = cms.OutputModule( "PoolOutputModule",
+    fileName = cms.untracked.string( "outputFEVTDEBUGHLT.root" ),
+    compressionAlgorithm = cms.untracked.string( "ZSTD" ),
+    compressionLevel = cms.untracked.int32( 3 ),
+    fastCloning = cms.untracked.bool( False ),
+    dataset = cms.untracked.PSet(
+        dataTier = cms.untracked.string('HLTDEBUG'),
+        filterName = cms.untracked.string('')
+    ),
+    outputCommands = process.FEVTDEBUGHLTEventContent.outputCommands
+)
 
 process.HLTL1UnpackerSequence = cms.Sequence( process.hltGtStage2Digis )
 process.HLTBeamSpot = cms.Sequence( process.hltOnlineMetaDataDigis + process.hltOnlineBeamSpot )
@@ -3044,9 +3051,10 @@ process.ExpressCosmicsOutput = cms.FinalPath( process.hltOutputExpressCosmics )
 process.NanoDSTOutput = cms.FinalPath( process.hltOutputNanoDST )
 process.PhysicsOutput = cms.FinalPath( process.hltOutputPhysics )
 process.RawPrimeOutput = cms.FinalPath( process.hltOutputRawPrime )
+process.FEVTDEBUGHLTOutput = cms.FinalPath( process.hltOutputFEVTDEBUGHLT )
 
 
-process.schedule = cms.Schedule( *(process.HLTriggerFirstPath, process.Status_OnCPU, process.Status_OnGPU, process.HLT_Physics_v8, process.HLT_Random_v1, process.HLT_EcalCalibration_v4, process.HLT_HcalCalibration_v5, process.HLT_HIRawPrime_v1, process.HLT_L1FatEvents_v2, process.HLT_L1ZDC_v1, process.HLT_DQML1SeedsGroup1_v1, process.DST_Physics_v2, process.HLTriggerFinalPath, process.DQMHistograms, process.RatesMonitoring, process.Dataset_EcalLaser, process.Dataset_ExpressCosmics, process.Dataset_HLTPhysics, process.Dataset_L1Accept, process.Dataset_CommissioningZDC, process.Dataset_OnlineMonitor, process.Dataset_TestEnablesEcalHcal, process.Dataset_TestEnablesEcalHcalDQM, process.Dataset_CommissioningRawPrime, process.CalibrationOutput, process.DQMOutput, process.DQMCalibrationOutput, process.EcalCalibrationOutput, process.ExpressCosmicsOutput, process.NanoDSTOutput, process.PhysicsOutput, process.RawPrimeOutput, ))
+process.schedule = cms.Schedule( *(process.HLTriggerFirstPath, process.Status_OnCPU, process.Status_OnGPU, process.HLT_Physics_v8, process.HLT_Random_v1, process.HLT_EcalCalibration_v4, process.HLT_HcalCalibration_v5, process.HLT_HIRawPrime_v1, process.HLT_L1FatEvents_v2, process.HLT_L1ZDC_v1, process.HLT_DQML1SeedsGroup1_v1, process.DST_Physics_v2, process.HLTriggerFinalPath, process.DQMHistograms, process.RatesMonitoring, process.Dataset_EcalLaser, process.Dataset_ExpressCosmics, process.Dataset_HLTPhysics, process.Dataset_L1Accept, process.Dataset_CommissioningZDC, process.Dataset_OnlineMonitor, process.Dataset_TestEnablesEcalHcal, process.Dataset_TestEnablesEcalHcalDQM, process.Dataset_CommissioningRawPrime, process.CalibrationOutput, process.DQMOutput, process.DQMCalibrationOutput, process.EcalCalibrationOutput, process.ExpressCosmicsOutput, process.NanoDSTOutput, process.PhysicsOutput, process.RawPrimeOutput, process.FEVTDEBUGHLTOutput ))
 
 
 # source module (EDM inputs)
@@ -3101,7 +3109,7 @@ _customInfo['globalTags'][False] = "auto:run3_mc_GRun"
 _customInfo['inputFiles']={}
 _customInfo['inputFiles'][True]  = "file:RelVal_Raw_GRun_DATA.root"
 _customInfo['inputFiles'][False] = "file:RelVal_Raw_GRun_MC.root"
-_customInfo['maxEvents' ]=  100000
+_customInfo['maxEvents' ]=  10
 _customInfo['globalTag' ]= "132X_dataRun3_HLT_v2"
 _customInfo['inputFile'] = ['/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/813/00000/041AFBC1-FAF8-F240-BCEC-BEBE2FB67A32.root',
                             '/store/hidata/HIRun2018/HITrackerVriginRaw/RAW/v1/000/325/822/00000/1BFB3A43-32A2-8448-BCC8-DA71CD30B2C3.root',
