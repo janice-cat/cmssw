@@ -3,8 +3,8 @@ from CRABClient.UserUtilities import getUsername
 
 config = Configuration()
 
-inputList = 'file_test.txt'
-jobTag = "test_1003_new"
+inputList = 'file_bis_run374719_0005.txt'
+jobTag = "bis_run374719_0005"
 username = getUsername()
 
 config.section_("General")
@@ -28,7 +28,7 @@ config.Data.totalUnits = len(config.Data.userInputFiles)
 #config.Data.inputDataset = '/Alternatively/DefineDataset/InsteadOf/InputFileList'
 config.Data.inputDBS = 'global'
 config.Data.splitting = 'FileBased'
-config.Data.unitsPerJob = 2
+config.Data.unitsPerJob = 1
 config.Data.outLFNDirBase = '/store/group/phys_heavyions/' + username + '/run3RapidValidation/' + config.General.requestName
 config.Data.publication = False
 
