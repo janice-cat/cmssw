@@ -9,64 +9,97 @@ import PlotUtils as pu
 import awkward as ak
 
 def main():
-	filepath = sys.argv[1]
-	prefix 	 = os.path.basename(filepath).replace('.root','')
+	inFileName = sys.argv[1]
+	prefix 	 = os.path.basename(inFileName).replace('.root','') if '.root' in inFileName else \
+		   os.path.basename(inFileName).replace('.txt','')
 
-	tSkimHLT= uproot.open(filepath)['skimanalysis/HltTree;1']. \
-		arrays(['pprimaryVertexFilter'], library='pd')
-	nEvtMax = 50000 if 50000 < tSkimHLT.shape[0] else \
-		  tSkimHLT.shape[0]
+	fileList = getFileList(inFileName)
 
-	tSkimHLT=tSkimHLT[:nEvtMax]
-	tHLT 	= uproot.open(filepath)['hltanalysis/HltTree;1']. \
-		arrays(['L1_MinimumBiasHF1_AND_BptxAND',
-			'L1_MinimumBiasHF2_AND_BptxAND','L1_NotMinimumBiasHF2_AND_BptxAND',
-			'L1_ZDC22_OR_BptxAND','L1_ZDC80_OR_BptxAND','L1_ZDC133_OR_BptxAND',
-			'L1_ZDCP22_BptxAND','L1_ZDCM22_BptxAND','L1_ZDC22_AND_BptxAND',
-			'L1_ZDCP80_BptxAND','L1_ZDCM80_BptxAND','L1_ZDC80_AND_BptxAND',
-			'L1_ZDCP133_BptxAND','L1_ZDCM133_BptxAND','L1_ZDC133_AND_BptxAND',
-			'L1_ZDC1n_OR_BptxAND','L1_ZDC1n_OR_MinimumBiasHF1_AND_BptxAND','L1_ZDC1n_OR_MinimumBiasHF2_AND_BptxAND',
-			'L1_ZDC1n_XOR_MinimumBiasHF1_AND_BptxAND','L1_ZDC1n_XOR_MinimumBiasHF2_AND_BptxAND','L1_ZDC1n_AND_MinimumBiasHF2_AND_BptxAND',
-			'L1_ZDC2n_OR_MinimumBiasHF1_AND_BptxAND','L1_ZDC2n_OR_MinimumBiasHF2_AND_BptxAND',
-			'L1_ZDC3n_OR_MinimumBiasHF1_AND_BptxAND','L1_ZDC3n_OR_MinimumBiasHF2_AND_BptxAND',
-			'L1_ZDC22_OR','L1_ZDC80_OR','L1_ZDC133_OR',
-			'L1_ZDCP22','L1_ZDCM22','L1_ZDC22_AND',
-			'L1_ZDCP80','L1_ZDCM80','L1_ZDC80_AND',
-			'L1_ZDCP133','L1_ZDCM133','L1_ZDC133_AND',
-			'L1_SingleJet8_NotMinimumBiasHF2_AND_BptxAND','L1_SingleJet12_NotMinimumBiasHF2_AND_BptxAND','L1_SingleJet16_NotMinimumBiasHF2_AND_BptxAND',
-			'L1_SingleJet8_ZDC1n_XOR_BptxAND','L1_SingleJet12_ZDC1n_XOR_BptxAND','L1_SingleJet16_ZDC1n_XOR_BptxAND' 
-			], library='pd')[:nEvtMax]
-	tL1 	= uproot.open(filepath)['l1object/L1UpgradeFlatTree;1']. \
-		arrays([ 'nJets','jetEt','jetEta','jetPUEt','jetBx',
-			 'nSums','sumType','sumEt','sumPhi','sumBx'], library='pd')[:nEvtMax]
-	tTrack 	= uproot.open(filepath)['ppTracks/trackTree;1']. \
-		arrays(['nTrk', 'nVtx',
-			'xVtx', 'yVtx', 'zVtx',
-			'xErrVtx', 'yErrVtx', 'zErrVtx',
-			'chi2Vtx', 'ndofVtx', 'isFakeVtx', 
-			'nTracksVtx', 'ptSumVtx'], library='pd')[:nEvtMax]
-	tZDC 	= uproot.open(filepath)['zdcanalyzer/zdcdigi;1']. \
-		arrays(['sumPlus', 'sumMinus'], library='pd')[:nEvtMax]	
-	tDfinder= uproot.open(filepath)['Dfinder/ntDkpi;1']. \
-		arrays(['Dsize', 
-			'Dmass', 'D_unfitted_mass', 'DsvpvDistance',
-			'Dpt', 'D_unfitted_pt',
-			'Deta','Dphi',
-			'DvtxX', 'DvtxY', 'DvtxZ',
-			'Dd0', 'Dd0Err', 'Ddca',
-			'Dchi2ndf', 'Dchi2cl', 'Dalpha'], library='pd')[:nEvtMax]
+	tSkimHLT, tHLT, tL1, tTrack, tZDC, tDfinder = [], [], [], [], [], []
+	nEvtMax, nEvtMaxCounter = 50000, 50000
 
-	print(tHLT)
+	for filepath in fileList:
+		if nEvtMaxCounter <= 0: break
+		print(filepath, nEvtMaxCounter)
+		tSkimHLT.append(uproot.open(filepath).key('skimanalysis/HltTree').get(). \
+			arrays(['pprimaryVertexFilter'], library='pd') )
+		
+		tHLT.append( 	uproot.open(filepath).key('hltanalysis/HltTree').get(). \
+			arrays(['L1_MinimumBiasHF1_AND_BptxAND',
+				'L1_MinimumBiasHF2_AND_BptxAND','L1_NotMinimumBiasHF2_AND_BptxAND',
+				'L1_ZDC22_OR_BptxAND','L1_ZDC80_OR_BptxAND','L1_ZDC133_OR_BptxAND',
+				'L1_ZDCP22_BptxAND','L1_ZDCM22_BptxAND','L1_ZDC22_AND_BptxAND',
+				'L1_ZDCP80_BptxAND','L1_ZDCM80_BptxAND','L1_ZDC80_AND_BptxAND',
+				'L1_ZDCP133_BptxAND','L1_ZDCM133_BptxAND','L1_ZDC133_AND_BptxAND',
+				'L1_ZDC1n_OR_BptxAND','L1_ZDC1n_OR_MinimumBiasHF1_AND_BptxAND','L1_ZDC1n_OR_MinimumBiasHF2_AND_BptxAND',
+				'L1_ZDC1n_XOR_MinimumBiasHF1_AND_BptxAND','L1_ZDC1n_XOR_MinimumBiasHF2_AND_BptxAND','L1_ZDC1n_AND_MinimumBiasHF2_AND_BptxAND',
+				'L1_ZDC2n_OR_MinimumBiasHF1_AND_BptxAND','L1_ZDC2n_OR_MinimumBiasHF2_AND_BptxAND',
+				'L1_ZDC3n_OR_MinimumBiasHF1_AND_BptxAND','L1_ZDC3n_OR_MinimumBiasHF2_AND_BptxAND',
+				'L1_ZDC22_OR','L1_ZDC80_OR','L1_ZDC133_OR',
+				'L1_ZDCP22','L1_ZDCM22','L1_ZDC22_AND',
+				'L1_ZDCP80','L1_ZDCM80','L1_ZDC80_AND',
+				'L1_ZDCP133','L1_ZDCM133','L1_ZDC133_AND',
+				'L1_SingleJet8_NotMinimumBiasHF2_AND_BptxAND','L1_SingleJet12_NotMinimumBiasHF2_AND_BptxAND','L1_SingleJet16_NotMinimumBiasHF2_AND_BptxAND',
+				'L1_SingleJet8_ZDC1n_XOR_BptxAND','L1_SingleJet12_ZDC1n_XOR_BptxAND','L1_SingleJet16_ZDC1n_XOR_BptxAND' 
+				], library='pd') )
+
+		tL1.append( 	uproot.open(filepath).key('l1object/L1UpgradeFlatTree').get(). \
+			arrays([ 'nJets','jetEt','jetEta','jetPUEt','jetBx',
+				 'nSums','sumType','sumEt','sumPhi','sumBx'], library='pd') )
+
+		tTrack.append( 	uproot.open(filepath).key('ppTracks/trackTree').get(). \
+			arrays(['nTrk', 'nVtx',
+				'xVtx', 'yVtx', 'zVtx',
+				'xErrVtx', 'yErrVtx', 'zErrVtx',
+				'chi2Vtx', 'ndofVtx', 'isFakeVtx', 
+				'nTracksVtx', 'ptSumVtx'], library='pd') )
+
+		tZDC.append( 	uproot.open(filepath).key('zdcanalyzer/zdcdigi').get(). \
+			arrays(['sumPlus', 'sumMinus'], library='pd') )
+
+		tDfinder.append(uproot.open(filepath).key('Dfinder/ntDkpi').get(). \
+			arrays(['Dsize', 
+				'Dmass', 'D_unfitted_mass', 'DsvpvDistance',
+				'Dpt', 'D_unfitted_pt',
+				'Deta','Dphi',
+				'DvtxX', 'DvtxY', 'DvtxZ',
+				'Dd0', 'Dd0Err', 'Ddca',
+				'Dchi2ndf', 'Dchi2cl', 'Dalpha'], library='pd') )
+
+		nEvtMaxCounter -= tSkimHLT[-1].shape[0]
+
 	print(tSkimHLT)
+	print(tHLT)
+	print(tL1)
+	print(tTrack)
+	print(tZDC)
+	print(tDfinder)
+	
+	tSkimHLT 	= pd.concat(tSkimHLT)
+	tHLT 		= pd.concat(tHLT)
+	tL1 		= pd.concat(tL1)
+	tTrack 		= pd.concat(tTrack)
+	tZDC 		= pd.concat(tZDC)
+	tDfinder 	= pd.concat(tDfinder)
+	if nEvtMax > tSkimHLT.shape[0]: nEvtMax = tSkimHLT.shape[0]
+
+	tSkimHLT	= tSkimHLT[:nEvtMax]
+	tHLT		= tHLT[:nEvtMax]
+	tL1		= tL1[:nEvtMax]
+	tTrack		= tTrack[:nEvtMax]
+	tZDC		= tZDC[:nEvtMax]
+	tDfinder	= tDfinder[:nEvtMax]
+
+	print(tSkimHLT)
+	print(tHLT)
 	print(tL1)
 	print(tTrack)
 	print(tZDC)
 	print(tDfinder)
 
-	df 	= pd.concat([tHLT, tSkimHLT, tL1, tTrack, tZDC, tDfinder], axis=1)
+	df 	= pd.concat([tSkimHLT, tHLT, tL1, tTrack, tZDC, tDfinder], axis=1)
 
 	print(df.shape)
-
 
 	plotL1TriggerStatus(df, prefix)
 	plotL1Obj(df, prefix)
@@ -322,6 +355,20 @@ def plotDCand(df, prefix):
 		 [ 'Dchi2cl', 'Dchi2cl', (0, 1) ],
 		 [ 'Dalpha', 'Dalpha', (0, np.pi), 1 ]],
 		 'img/'+prefix+'_UPCSpectra_Dcand_fit.png', 100)
+
+def getFileList(inFileName):
+	fileList = []
+	if len(inFileName) < 5:
+		print("[Error] Given inFileName \'", inFileName, "\' is invalid, exit 1." )
+		sys.exit(1)
+	elif ".txt" in inFileName:
+		fileList = list(np.genfromtxt(inFileName, dtype=str))
+	elif ".root" in inFileName:
+	        fileList.append(inFileName)
+	else:
+		print("[Error] Given inFileName \'", inFileName, "\' is invalid, exit 1." )
+		sys.exit(1)
+	return(fileList)
 
 def flatten_df(df, flatten_arr):
 	df_flatVtx 		= df.copy(deep=True)
