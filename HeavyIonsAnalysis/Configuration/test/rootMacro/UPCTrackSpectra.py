@@ -18,12 +18,13 @@ def main():
 		   os.path.basename(inFileName).replace('.txt','')
 
 	runIdx 	 = prefix.replace('run','')
+	runIdx 	 = '374681'
 	lumiMask_forThisRun = np.array(lumiMask[runIdx])
 	print('lumiMask_forThisRun', lumiMask_forThisRun)
 
 	fileList = getFileList(inFileName)
 
-	tSkimHLT, tHLT, tL1, tTrack, tZDC, tDfinder, tEvt, tAk4PFJet = [], [], [], [], [], [], [], []
+	tSkimHLT, tHLT, tL1, tTrack, tZDC, tDfinder, tEvt, tAk4PFJet, tAk4CaloJet = [], [], [], [], [], [], [], [], []
 	nEvtMax, nEvtMaxCounter = 50000, 50000
 
 	for filepath in fileList:
@@ -58,7 +59,9 @@ def main():
 				'L1_ZDCP133','L1_ZDCM133','L1_ZDC133_AND',
 				'L1_SingleJet8_NotMinimumBiasHF2_AND_BptxAND','L1_SingleJet12_NotMinimumBiasHF2_AND_BptxAND','L1_SingleJet16_NotMinimumBiasHF2_AND_BptxAND',
 				'L1_SingleJet8_ZDC1n_XOR_BptxAND','L1_SingleJet12_ZDC1n_XOR_BptxAND','L1_SingleJet16_ZDC1n_XOR_BptxAND',
-				'HLT_HIMinimumBiasHF1AND_*v[0-9]'],
+				'HLT_HIMinimumBiasHF1AND_*v[0-9]', 
+				'HLT_HIUPC_SingleJet8_ZDC1nXOR_MaxPixelCluster50000_v2',
+				'HLT_HIUPC_SingleJet8_NotMBHF2AND_MaxPixelCluster50000_v2'],
 				library='pd') )
 
 		tL1.append( 	uproot.open(filepath).key('l1object/L1UpgradeFlatTree').get(). \
@@ -83,11 +86,17 @@ def main():
 				'DvtxX', 'DvtxY', 'DvtxZ',
 				'Dd0', 'Dd0Err', 'Ddca',
 				'Dchi2ndf', 'Dchi2cl', 'Dalpha'], library='pd') )
+
 		tEvt.append( evtDf )
+
 		tAk4PFJet.append(uproot.open(filepath).key('ak4PFJetAnalyzer/t').get(). \
 			arrays(['jteta', 'jtpt', 'nref',
 				'jtPfNHF', 'jtPfNEF', 'jtPfMUF', 'jtPfCHF', 'jtPfCEF',
 				'jtPfNHM', 'jtPfCHM'], library='pd'))
+
+		tAk4CaloJet.append(uproot.open(filepath).key('ak4CaloJetAnalyzer/caloJetTree').get(). \
+			arrays(['jteta', 'jtpt'], library='pd'). \
+			rename(columns={'jteta': 'calo_jteta', 'jtpt': 'calo_jtpt'}))
 
 		nEvtMaxCounter -= tSkimHLT[-1].shape[0]
 
@@ -110,6 +119,7 @@ def main():
 	tDfinder 	= pd.concat(tDfinder)
 	tEvt 		= pd.concat(tEvt)
 	tAk4PFJet 	= pd.concat(tAk4PFJet)
+	tAk4CaloJet 	= pd.concat(tAk4CaloJet)
 	if nEvtMax > tSkimHLT.shape[0]: nEvtMax = tSkimHLT.shape[0]
 
 	tSkimHLT	= tSkimHLT[:nEvtMax]
@@ -120,6 +130,7 @@ def main():
 	tDfinder	= tDfinder[:nEvtMax]
 	tEvt		= tEvt[:nEvtMax]
 	tAk4PFJet	= tAk4PFJet[:nEvtMax]
+	tAk4CaloJet	= tAk4CaloJet[:nEvtMax]
 
 	print(tSkimHLT)
 	print(tHLT)
@@ -129,10 +140,11 @@ def main():
 	print(tDfinder)
 	print(tEvt)
 	print(tAk4PFJet)
+	print(tAk4CaloJet)
 
-	df 	= pd.concat([tSkimHLT, tHLT, tL1, tTrack, tZDC, tDfinder, tEvt, tAk4PFJet], axis=1)
+	df 	= pd.concat([tSkimHLT, tHLT, tL1, tTrack, tZDC, tDfinder, tEvt, tAk4PFJet, tAk4CaloJet], axis=1)
 
-	del tSkimHLT, tHLT, tL1, tTrack, tZDC, tDfinder, tEvt, tAk4PFJet
+	del tSkimHLT, tHLT, tL1, tTrack, tZDC, tDfinder, tEvt, tAk4PFJet, tAk4CaloJet
 	gc.collect()
 	print(gc.garbage)
 
@@ -140,15 +152,16 @@ def main():
 
 
 	plotAK4PFJet(df, prefix)
-	# plotHLTTriggerStatus(df, prefix, HLTMBPaths)
-	# plotL1TriggerStatus(df, prefix)
+	plotAK4CaloJet(df, prefix)
+	plotHLTTriggerStatus(df, prefix, HLTMBPaths)
+	plotL1TriggerStatus(df, prefix)
 	plotL1Obj(df, prefix, 
-		doJetEtTrigSelStudy=True, HLTMBPaths=HLTMBPaths,
+		doJetEtTrigSelStudy=False, HLTMBPaths=HLTMBPaths,
 		doLeadingJet=True)
-	# plotPV(df, prefix)
-	# plotNTrk(df, prefix)
-	# plotZDC(df, prefix)
-	# plotDCand(df, prefix)
+	plotPV(df, prefix)
+	plotNTrk(df, prefix)
+	plotZDC(df, prefix)
+	plotDCand(df, prefix)
 
 
 def plotAK4PFJet(df, prefix):
@@ -157,24 +170,95 @@ def plotAK4PFJet(df, prefix):
 		    'jtPfNHM', 'jtPfCHM']
 	df_flatJet = flatten_df(df, _jetlist)
 
+	print(1/df_flatJet.index.shape[0])
 	dnm.plotVarsState(
-		[[ '', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_ZDC1n_XOR_MinimumBiasHF1_AND_BptxAND==1') ] ]],
+		[[ 'no cut', df_flatJet ],
+		 [ 'pass PV', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1') ] ],
+		 [ 'fail PV', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==0') ] ]],
 		[[ 'jteta', 'AK4PF jteta', (-5, 5) ],
 		 [ 'jtpt', 'AK4PF jtpt', (0, 70) ]],
-		 'img/'+prefix+'_UPCSpectra_AK4PFJet_cleanedUp_zdcxor_normalized.png', 100,
+		 'img/'+prefix+'_UPCSpectra_AK4PFJet_PV_normalized.png', 100,
+		 # density=2)
+		 in_weights=1/df_flatJet.shape[0])
+
+	dnm.plotVarsState(
+		[[ '', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0') ] ]],
+		[[ 'jteta', 'AK4PF jteta', (-5, 5) ],
+		 [ 'jtpt', 'AK4PF jtpt', (0, 70) ]],
+		 'img/'+prefix+'_UPCSpectra_AK4PFJet_cleanedUp_nonMB_normalized.png', 100,
 		 density=2)
 
 	dnm.plotVarsState(
-		[[ '', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_ZDC1n_XOR_MinimumBiasHF1_AND_BptxAND==1 & (' \
-						   '(abs(jteta)<=2.6 & jtPfNHF<0.99 & jtPfNEF<0.90 & nref>1 & jtPfMUF<0.80 & jtPfCHF>0.01 & jtPfCHM>0 & jtPfCEF<0.80) | ' \
+		[[ 'PV+~MB', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0') ] ],
+		 [ 'PV+~MB+emu(ZDC1n_XOR)', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0 & '
+		 						       '((sumPlus>1100 & sumMinus<1100) | (sumPlus<1100 & sumMinus>1100))') ] ]],
+		[[ 'jteta', 'AK4PF jteta', (-5, 5) ],
+		 [ 'jtpt', 'AK4PF jtpt', (0, 70) ]],
+		 'img/'+prefix+'_UPCSpectra_AK4PFJet_cleanedUp_emuzdcxor_normalized.png', 100,
+		 # density=2)
+		 in_weights=1/df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0') ].shape[0])
+
+	dnm.plotVarsState(
+		[[ '(1)ZDCXOR+Jet8', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & HLT_HIUPC_SingleJet8_ZDC1nXOR_MaxPixelCluster50000_v2==1') ] ],
+		 [ '(2)NotHFAND+Jet8', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & HLT_HIUPC_SingleJet8_NotMBHF2AND_MaxPixelCluster50000_v2==1') ] ],
+		 [ '(1)+(2)', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & HLT_HIUPC_SingleJet8_ZDC1nXOR_MaxPixelCluster50000_v2==1 & HLT_HIUPC_SingleJet8_NotMBHF2AND_MaxPixelCluster50000_v2==1') ] ],
+		],
+		[[ 'jteta', 'AK4PF jteta', (-5, 5) ],
+		 [ 'jtpt', 'AK4PF jtpt', (0, 70) ]],
+		 'img/'+prefix+'_UPCSpectra_AK4PFJet_cleanedUp_lowptJetTriggered_normalized.png', 100,
+		 density=2)
+
+	dnm.plotVarsState(
+		[[ '', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0 & (' \
+						   '(abs(jteta)<=2.6 & jtPfNHF<0.90 & jtPfNEF<0.90 & nref>1 & jtPfMUF<0.80 & jtPfCHF>0.01 & jtPfCHM>0 & jtPfCEF<0.80) | ' \
 				 '(abs(jteta)> 2.6 & abs(jteta)<=2.7 & jtPfNHF<0.90 & jtPfNEF<0.99 &          jtPfMUF<0.80 &                jtPfCHM>0 & jtPfCEF<0.80) | ' \
-				 '(abs(jteta)> 2.7 & abs(jteta)<=3.0 & jtPfNHF<0.99 & jtPfNEF<0.99 &                                                                   jtPfNHM>1) | ' \
-				 '(abs(jteta)> 3.0 & abs(jteta)<=5.0 &                jtPfNEF<0.4  &                                                                   jtPfNHM>10) )' ) ] ]],
+				 '(abs(jteta)> 2.7 & abs(jteta)<=3.0 &                jtPfNEF<0.99 &                                                                   jtPfNHM>1) | ' \
+				 '(abs(jteta)> 3.0 & abs(jteta)<=5.0 & jtPfNHF>0.2  & jtPfNEF<0.9  &                                                                   jtPfNHM>10) )' ) ] ]],
 		[[ 'jteta', 'AK4PF jteta', (-5, 5) ],
 		 [ 'jtpt', 'AK4PF jtpt', (0, 70) ]],
-		 'img/'+prefix+'_UPCSpectra_AK4PFJet_cleanedUp_zdcxor_jetid_normalized.png', 100,
+		 'img/'+prefix+'_UPCSpectra_AK4PFJet_cleanedUp_nonMB_jetid_normalized.png', 100,
 		 density=2)
 
+def plotAK4CaloJet(df, prefix):
+	_jetlist = ['calo_jteta','calo_jtpt']
+	df_flatJet = flatten_df(df, _jetlist)
+
+	dnm.plotVarsState(
+		[[ 'no cut', df_flatJet ],
+		 [ 'pass PV', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1') ] ],
+		 [ 'fail PV', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==0') ] ]],
+		[[ 'calo_jteta', 'AK4Calo jteta', (-5, 5) ],
+		 [ 'calo_jtpt', 'AK4Calo jtpt', (0, 70) ]],
+		 'img/'+prefix+'_UPCSpectra_AK4CaloJet_PV_normalized.png', 100,
+		 # density=2)
+		 in_weights=1/df_flatJet.shape[0])
+
+	dnm.plotVarsState(
+		[[ '', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0') ] ]],
+		[[ 'calo_jteta', 'AK4Calo jteta', (-5, 5) ],
+		 [ 'calo_jtpt', 'AK4Calo jtpt', (0, 70) ]],
+		 'img/'+prefix+'_UPCSpectra_AK4CaloJet_cleanedUp_nonMB_normalized.png', 100,
+		 density=2)
+
+	dnm.plotVarsState(
+		[[ 'PV+~MB', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0') ] ],
+		 [ 'PV+~MB+emu(ZDC1n_XOR)', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0 & '
+		 						       '((sumPlus>1100 & sumMinus<1100) | (sumPlus<1100 & sumMinus>1100))') ] ]],
+		[[ 'calo_jteta', 'AK4Calo jteta', (-5, 5) ],
+		 [ 'calo_jtpt', 'AK4Calo jtpt', (0, 70) ]],
+		 'img/'+prefix+'_UPCSpectra_AK4CaloJet_cleanedUp_emuzdcxor_normalized.png', 100,
+		 # density=2)
+		 in_weights=1/df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0') ].shape[0])
+
+	dnm.plotVarsState(
+		[[ '(1)ZDCXOR+Jet8', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & HLT_HIUPC_SingleJet8_ZDC1nXOR_MaxPixelCluster50000_v2==1') ] ],
+		 [ '(2)NotHFAND+Jet8', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & HLT_HIUPC_SingleJet8_NotMBHF2AND_MaxPixelCluster50000_v2==1') ] ],
+		 [ '(1)+(2)', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & HLT_HIUPC_SingleJet8_ZDC1nXOR_MaxPixelCluster50000_v2==1 & HLT_HIUPC_SingleJet8_NotMBHF2AND_MaxPixelCluster50000_v2==1') ] ],
+		],
+		[[ 'calo_jteta', 'AK4Calo jteta', (-5, 5) ],
+		 [ 'calo_jtpt', 'AK4Calo jtpt', (0, 70) ]],
+		 'img/'+prefix+'_UPCSpectra_AK4CaloJet_cleanedUp_lowptJetTriggered_normalized.png', 100,
+		 density=2)
 
 def plotL1TriggerStatus(df, prefix):
 	dnm.plotVarsState(
@@ -268,24 +352,45 @@ def plotL1Obj(df, prefix, doJetEtTrigSelStudy=False, HLTMBPaths=[], doLeadingJet
 	dnm.plotVarsState(
 		[[ '', df_flatJet ]],
 		[[ 'jetEta', 'jetEta', (-5, 5) ],
-		 [ 'jetEt', 'jetEt', (0, 100) ],
+		 [ 'jetEt', 'jetEt', (0, 70) ],
 		 [ 'jetPUEt', 'jetPUEt', (0, 100) ]],
 		 'img/'+prefix+'_UPCSpectra_l1jet.png', 100)
 
 	dnm.plotVarsState(
-		[[ '', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_ZDC1n_XOR_MinimumBiasHF1_AND_BptxAND==1') ] ]],
-		[[ 'jetEta', 'leading jetEta', (-5, 5) ],
-		 [ 'jetEt', 'leading jetEt', (0, 70) ]],
-		 'img/'+prefix+'_UPCSpectra_l1jet_cleanedUp_zdcxor_normalized.png', 100,
+		[[ 'no cut', df_flatJet ],
+		 [ 'pass PV', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1') ] ],
+		 [ 'fail PV', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==0') ] ]],
+		[[ 'jetEta', 'jetEta', (-5, 5) ],
+		 [ 'jetEt', 'jetEt', (0, 70) ]],
+		 'img/'+prefix+'_UPCSpectra_l1jet_PV_normalized.png', 100,
+		 # density=2)
+		 in_weights=1/df_flatJet.shape[0])
+
+	dnm.plotVarsState(
+		[[ '', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0') ] ]],
+		[[ 'jetEta', 'jetEta', (-5, 5) ],
+		 [ 'jetEt', 'jetEt', (0, 70) ]],
+		 'img/'+prefix+'_UPCSpectra_l1jet_cleanedUp_nonMB_normalized.png', 100,
 		 density=2)
 
 	dnm.plotVarsState(
-		[[ 'PV+ L1_ZDC1n_XOR_HF1', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_ZDC1n_XOR_MinimumBiasHF1_AND_BptxAND==1') ] ],
-		 [ 'PV+MB+emu(ZDC1n_XOR)', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0 & '
+		[[ 'PV+~MB', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0') ] ],
+		 [ 'PV+~MB+emu(ZDC1n_XOR)', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0 & '
 		 						       '((sumPlus>1100 & sumMinus<1100) | (sumPlus<1100 & sumMinus>1100))') ] ]],
-		[[ 'jetEta', 'leading jetEta', (-5, 5) ],
-		 [ 'jetEt', 'leading jetEt', (0, 70) ]],
-		 'img/'+prefix+'_UPCSpectra_l1jet_cleanedUp_detailed_normalized.png', 100,
+		[[ 'jetEta', 'jetEta', (-5, 5) ],
+		 [ 'jetEt', 'jetEt', (0, 70) ]],
+		 'img/'+prefix+'_UPCSpectra_l1jet_cleanedUp_emuzdcxor_normalized.png', 100,
+		 # density=2)
+		 in_weights=1/df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0') ].shape[0])
+
+	dnm.plotVarsState(
+		[[ '(1)ZDCXOR+Jet8', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & HLT_HIUPC_SingleJet8_ZDC1nXOR_MaxPixelCluster50000_v2==1') ] ],
+		 [ '(2)NotHFAND+Jet8', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & HLT_HIUPC_SingleJet8_NotMBHF2AND_MaxPixelCluster50000_v2==1') ] ],
+		 [ '(1)+(2)', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & HLT_HIUPC_SingleJet8_ZDC1nXOR_MaxPixelCluster50000_v2==1 & HLT_HIUPC_SingleJet8_NotMBHF2AND_MaxPixelCluster50000_v2==1') ] ],
+		],
+		[[ 'jetEta', 'jetEta', (-5, 5) ],
+		 [ 'jetEt', 'jetEt', (0, 70) ]],
+		 'img/'+prefix+'_UPCSpectra_l1jet_cleanedUp_lowptJetTriggered_normalized.png', 100,
 		 density=2)
 
 	_sumlist = ['sumType','sumEt','sumPhi','sumBx' ]
@@ -300,15 +405,6 @@ def plotL1Obj(df, prefix, doJetEtTrigSelStudy=False, HLTMBPaths=[], doLeadingJet
 
 	if (doJetEtTrigSelStudy):
 		dnm.plotVarsState(
-			[[ 'no cut', df_flatJet ],
-			 [ 'pass PV', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1') ] ],
-			 [ 'fail PV', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==0') ] ]],
-			[[ 'jetEta', 'jetEta', (-5, 5) ],
-			 [ 'jetEt', 'jetEt', (0, 100) ]],
-			 'img/'+prefix+'_UPCSpectra_l1jet_PV_normalized.png', 100,
-			 density=2)
-
-		dnm.plotVarsState(
 			[[ 'PV+~L1_HF1', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0') ] ],
 			 [ 'PV+~L1_HF2', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF2_AND_BptxAND==0') ] ],
 			 [ 'PV+~L1_ZDC1n_OR', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_ZDC1n_OR_BptxAND==0') ] ],
@@ -316,7 +412,7 @@ def plotL1Obj(df, prefix, doJetEtTrigSelStudy=False, HLTMBPaths=[], doLeadingJet
 			 [ 'PV+~L1_ZDC1n_OR_HF2', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_ZDC1n_OR_MinimumBiasHF2_AND_BptxAND==0') ] ],
 			 ],
 			[[ 'jetEta', 'jetEta', (-5, 5) ],
-			 [ 'jetEt', 'jetEt', (0, 100) ]],
+			 [ 'jetEt', 'jetEt', (0, 70) ]],
 			 'img/'+prefix+'_UPCSpectra_l1jet_PV_L1_NMB1_normalized.png', 100,
 			 density=2)
 
@@ -329,7 +425,7 @@ def plotL1Obj(df, prefix, doJetEtTrigSelStudy=False, HLTMBPaths=[], doLeadingJet
 			 [ 'PV+~L1_ZDC3n_OR_HF2', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_ZDC3n_OR_MinimumBiasHF2_AND_BptxAND==0') ] ]
 			 ],
 			[[ 'jetEta', 'jetEta', (-5, 5) ],
-			 [ 'jetEt', 'jetEt', (0, 100) ]],
+			 [ 'jetEt', 'jetEt', (0, 70) ]],
 			 'img/'+prefix+'_UPCSpectra_l1jet_PV_L1_NMB2_normalized.png', 100,
 			 density=2)
 
@@ -341,7 +437,7 @@ def plotL1Obj(df, prefix, doJetEtTrigSelStudy=False, HLTMBPaths=[], doLeadingJet
 			 [ 'PV+L1_ZDC1n_OR_HF2', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_ZDC1n_OR_MinimumBiasHF2_AND_BptxAND==1') ] ],
 			 ],
 			[[ 'jetEta', 'jetEta', (-5, 5) ],
-			 [ 'jetEt', 'jetEt', (0, 100) ]],
+			 [ 'jetEt', 'jetEt', (0, 70) ]],
 			 'img/'+prefix+'_UPCSpectra_l1jet_PV_L1_MB1_normalized.png', 100,
 			 density=2)
 
@@ -354,7 +450,7 @@ def plotL1Obj(df, prefix, doJetEtTrigSelStudy=False, HLTMBPaths=[], doLeadingJet
 			 [ 'PV+L1_ZDC3n_OR_HF2', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_ZDC3n_OR_MinimumBiasHF2_AND_BptxAND==1') ] ]
 			 ],
 			[[ 'jetEta', 'jetEta', (-5, 5) ],
-			 [ 'jetEt', 'jetEt', (0, 100) ]],
+			 [ 'jetEt', 'jetEt', (0, 70) ]],
 			 'img/'+prefix+'_UPCSpectra_l1jet_PV_L1_MB2_normalized.png', 100,
 			 density=2)
 
@@ -364,14 +460,14 @@ def plotL1Obj(df, prefix, doJetEtTrigSelStudy=False, HLTMBPaths=[], doLeadingJet
 		dnm.plotVarsState(
 			[[ 'PV+~'+leg, df_flatJet[ df_flatJet.eval(cut+'0') ] ] for (leg, cut) in zip(legendArr, cutArr) ],
 			[[ 'jetEta', 'jetEta', (-5, 5) ],
-			 [ 'jetEt', 'jetEt', (0, 100) ]],
+			 [ 'jetEt', 'jetEt', (0, 70) ]],
 			 'img/'+prefix+'_UPCSpectra_l1jet_PV_HLT_NMB_normalized.png', 100,
 			 density=2)
 
 		dnm.plotVarsState(
 			[[ 'PV+'+leg, df_flatJet[ df_flatJet.eval(cut+'1') ] ] for (leg, cut) in zip(legendArr, cutArr) ],
 			[[ 'jetEta', 'jetEta', (-5, 5) ],
-			 [ 'jetEt', 'jetEt', (0, 100) ]],
+			 [ 'jetEt', 'jetEt', (0, 70) ]],
 			 'img/'+prefix+'_UPCSpectra_l1jet_PV_HLT_MB_normalized.png', 100,
 			 density=2)
 
@@ -383,7 +479,7 @@ def plotL1Obj(df, prefix, doJetEtTrigSelStudy=False, HLTMBPaths=[], doLeadingJet
 			 [ '(1)+12<jetEt<16', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & jetEt >= 12 & jetEt < 16') ] ],
 			 [ '(1)+16<jetEt<20', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & jetEt >= 16 & jetEt < 20') ] ]],
 			[[ 'jetEta', 'jetEta', (-5, 5) ],
-			 [ 'jetEt', 'jetEt', (0, 100) ]],
+			 [ 'jetEt', 'jetEt', (0, 70) ]],
 			 'img/'+prefix+'_UPCSpectra_l1jetEtDep.png', 100)
 
 	del df_flatJet
@@ -403,22 +499,34 @@ def plotL1Obj(df, prefix, doJetEtTrigSelStudy=False, HLTMBPaths=[], doLeadingJet
 			[[ 'jetEta_EtMax', 'leading jetEta', (-5, 5) ],
 			 [ 'jetEtMax', 'leading jetEt', (0, 70) ]],
 			 'img/'+prefix+'_UPCSpectra_l1Leadingjet_PV_normalized.png', 100,
-			 density=2)
+			 # density=2)
+			 in_weights=1/df_sub.shape[0])
 
 		dnm.plotVarsState(
-			[[ '', df_sub[ df_sub.eval('pprimaryVertexFilter==1 & L1_ZDC1n_XOR_MinimumBiasHF1_AND_BptxAND==1') ] ]],
+			[[ '', df_sub[ df_sub.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0') ] ]],
 			[[ 'jetEta_EtMax', 'leading jetEta', (-5, 5) ],
 			 [ 'jetEtMax', 'leading jetEt', (0, 70) ]],
-			 'img/'+prefix+'_UPCSpectra_l1Leadingjet_cleanedUp_zdcxor_normalized.png', 100,
+			 'img/'+prefix+'_UPCSpectra_l1Leadingjet_cleanedUp_nonMB_normalized.png', 100,
 			 density=2)
 
 		dnm.plotVarsState(
-			[[ 'PV+ L1_ZDC1n_XOR_HF1', df_sub[ df_sub.eval('pprimaryVertexFilter==1 & L1_ZDC1n_XOR_MinimumBiasHF1_AND_BptxAND==1') ] ],
-			 [ 'PV+MB+emu(ZDC1n_XOR)', df_sub[ df_sub.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0 & '
+			[[ 'PV+~MB', df_sub[ df_sub.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0') ] ],
+			 [ 'PV+~MB+emu(ZDC1n_XOR)', df_sub[ df_sub.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0 & '
 			 						       '((sumPlus>1100 & sumMinus<1100) | (sumPlus<1100 & sumMinus>1100))') ] ]],
 			[[ 'jetEta_EtMax', 'leading jetEta', (-5, 5) ],
 			 [ 'jetEtMax', 'leading jetEt', (0, 70) ]],
-			 'img/'+prefix+'_UPCSpectra_l1Leadingjet_cleanedUp_detailed_normalized.png', 100,
+			 'img/'+prefix+'_UPCSpectra_l1Leadingjet_cleanedUp_emuzdcxor_normalized.png', 100,
+			 # density=2)
+			 in_weights=1/df_sub[ df_sub.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0') ].shape[0])
+
+		dnm.plotVarsState(
+			[[ '(1)ZDCXOR+Jet8', df_sub[ df_sub.eval('pprimaryVertexFilter==1 & HLT_HIUPC_SingleJet8_ZDC1nXOR_MaxPixelCluster50000_v2==1') ] ],
+			 [ '(2)NotHFAND+Jet8', df_sub[ df_sub.eval('pprimaryVertexFilter==1 & HLT_HIUPC_SingleJet8_NotMBHF2AND_MaxPixelCluster50000_v2==1') ] ],
+			 [ '(1)+(2)', df_sub[ df_sub.eval('pprimaryVertexFilter==1 & HLT_HIUPC_SingleJet8_ZDC1nXOR_MaxPixelCluster50000_v2==1 & HLT_HIUPC_SingleJet8_NotMBHF2AND_MaxPixelCluster50000_v2==1') ] ],
+			],
+			[[ 'jetEta_EtMax', 'leading jetEta', (-5, 5) ],
+			 [ 'jetEtMax', 'leading jetEt', (0, 70) ]],
+			 'img/'+prefix+'_UPCSpectra_l1Leadingjet_cleanedUp_lowptJetTriggered_normalized.png', 100,
 			 density=2)
 	del df_sub
 	gc.collect()
@@ -578,7 +686,10 @@ def getFileList(inFileName):
 		print("[Error] Given inFileName \'", inFileName, "\' is invalid, exit 1." )
 		sys.exit(1)
 	elif ".txt" in inFileName:
-		fileList = list(np.genfromtxt(inFileName, dtype=str))
+		if (np.genfromtxt(inFileName, dtype=str).ndim==0):
+			fileList.append(str(np.genfromtxt(inFileName, dtype=str)))
+		else:
+			fileList = list(np.genfromtxt(inFileName, dtype=str))
 	elif ".root" in inFileName:
 	        fileList.append(inFileName)
 	else:
