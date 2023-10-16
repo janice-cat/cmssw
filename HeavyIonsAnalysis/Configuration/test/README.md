@@ -58,3 +58,7 @@ If this works, build is ready to produce
 - Output paths:
   - lxplus: `/eos/cms/store/group/phys_heavyions/yuchenc/run3RapidValidation/`
   - svmithi03: `/home/data/run3RapidValidation/`
+- Production history:
+  | version | run range | note |
+  |---|---|---|
+  | v0 | run 374719-375195 | only D0 candidate tree |
