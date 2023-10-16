@@ -1,5 +1,5 @@
-2023.10.03
-
+2023.10.03 [Please refer to this repo:dir for all info](https://github.com/cfmcginn/production/tree/main/HIRun2023/forestPPRef)
+# General building instruction
 Some small amount of files for getting the forest to run w/ the pp RECO miniAOD
 
 To build with the forest, start by following:
@@ -43,3 +43,18 @@ cmsRun forest_miniAOD_run3_ppRECO_DATA.py
 ```
 
 If this works, build is ready to produce
+
+
+---
+# Forest production
+- Forest codes:
+  - [forest_miniAOD_run3_ppRECO_DATA.py](forest_miniAOD_run3_ppRECO_DATA.py)
+    - Add zdcanalyzer
+  - [forest_miniAOD_run3_ppRECO_DATA_lowerDcut.py](forest_miniAOD_run3_ppRECO_DATA_lowerDcut.py)
+    - Add zdcanalyzer
+    - Relax track pt, Dpt cuts
+- Crab jobs:
+  - [crabForestTemplateWithEmap.py](crabForestTemplateWithEmap.py)
+- Output paths:
+  - lxplus: `/eos/cms/store/group/phys_heavyions/yuchenc/run3RapidValidation/`
+  - svmithi03: `/home/data/run3RapidValidation/`
