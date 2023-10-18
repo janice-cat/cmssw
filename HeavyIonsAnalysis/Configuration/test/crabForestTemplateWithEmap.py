@@ -3,8 +3,8 @@ from CRABClient.UserUtilities import getUsername
 
 config = Configuration()
 
-inputList = 'file_bis_run374719_0005.txt'
-jobTag = "bis_run374719_0005"
+inputList = 'file_run375013.txt'
+jobTag = "run375013"
 username = getUsername()
 
 config.section_("General")
@@ -16,8 +16,9 @@ config.General.transferLogs = False
 config.section_("JobType")
 config.JobType.pluginName = 'Analysis'
 config.JobType.psetName = 'forest_miniAOD_run3_ppRECO_DATA.py'
-config.JobType.maxMemoryMB = 2500
-config.JobType.maxJobRuntimeMin = 300
+# config.JobType.psetName = 'forest_miniAOD_run3_ppRECO_DATA_lowerDcut.py'
+config.JobType.maxMemoryMB = 3000
+config.JobType.maxJobRuntimeMin = 150
 config.JobType.scriptExe = 'submitScript.sh'
 config.JobType.inputFiles = ['emap_2023_newZDC_v3.txt']
 config.JobType.allowUndistributedCMSSW = True
