@@ -44,6 +44,22 @@ cmsRun forest_miniAOD_run3_ppRECO_DATA.py
 
 If this works, build is ready to produce
 
+# Include B finder
+```
+cd $CMSSW_BASE/src
+cmsenv
+git clone -b Dfinder_13XX_miniAOD https://github.com/boundino/Bfinder.git --depth 1
+source Bfinder/test/DnBfinder_to_Forest_132X_miniAOD.sh
+scram b -j4
+mkdir -p dfinder && cp HeavyIonsAnalysis/Configuration/test/forest_miniAOD_run3_DATA_wDfinder.py dfinder/ # taking data as an example
+cd dfinder/
+
+so that you get the latest fixed Bfinder from Jing.
+
+Also there is a working configuration here:
+
+~yjlee/public/forest_miniAOD_run3_forward_DATA_wBfinder.py
+```
 
 ---
 # Forest production
