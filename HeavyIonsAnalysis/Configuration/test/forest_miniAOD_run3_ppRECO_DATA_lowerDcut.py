@@ -31,14 +31,23 @@ process.source = cms.Source("PoolSource",
         # 'file:/afs/cern.ch/user/p/pchou/public/reco_RAW2DIGI_L1Reco_RECO_PAT_inMINIAOD_run37464X_calocut5.root'
         # 'file:/afs/cern.ch/user/p/pchou/public/reco_RAW2DIGI_L1Reco_RECO_PAT_inMINIAOD_run374719_ls0100.root'
         # [ 'file:'+f for f in glob.glob('/eos/cms/store/group/phys_heavyions/ginnocen/crabjobs_Run3_PbPbUPC/CRAB_UserFiles/crab_HIForwardStreamers/231003_225112/0000/reco_RAW2DIGI_L1Reco_RECO_PAT_inMINIAOD*.root')]
-        'root://eoscms.cern.ch//store/group/phys_heavyions/ginnocen/crabjobs_Run3_PbPbUPC_bis/CRAB_UserFiles/crab_HIForwardStreamers_bis/231004_010615/0005/reco_RAW2DIGI_L1Reco_RECO_PAT_inMINIAOD_5216.root'
+        # [ 'file:'+f for f in glob.glob('/eos/cms/store/group/phys_heavyions/pchou/RAW2DIGI/CRAB_UserFiles/crab_HIForwardStreamers_374833/231007_144019/000*/reco_RAW2DIGI_L1Reco_RECO_PAT_inMINIAOD_*.root')]
+        # [
+        # '/store/hidata/HIRun2023A/HIForward0/MINIAOD/PromptReco-v2/000/375/002/00000/ca3d2434-b8ff-489e-8b87-18e0e5cde2ec.root',
+        # '/store/hidata/HIRun2023A/HIForward0/MINIAOD/PromptReco-v2/000/375/002/00000/9d2bfdfd-683d-4e18-a488-b3915452737e.root',
+        # '/store/hidata/HIRun2023A/HIForward0/MINIAOD/PromptReco-v2/000/375/002/00000/c1252302-f9c1-4183-bd26-b39bcb5b18d9.root',
+        # '/store/hidata/HIRun2023A/HIForward0/MINIAOD/PromptReco-v2/000/375/002/00000/ca3d2434-b8ff-489e-8b87-18e0e5cde2ec.root',
+        # ]
+        '/store/hidata/HIRun2023A/HIForward0/MINIAOD/PromptReco-v2/000/375/055/00000/4eacc5c8-5e8a-4fc1-80ee-0237cd27e364.root'
     ), 
-    # eventsToProcess = cms.untracked.VEventRange("374719:252415368-374719:252415368")
 )
+
+import FWCore.PythonUtilities.LumiList as LumiList
+process.source.lumisToProcess = LumiList.LumiList(filename = '/eos/cms/store/group/phys_heavyions/sayan/HIN_run3_pseudo_JSON/HIPhysicsRawPrime/Golden_Online_live.json').getVLuminosityBlockRange()
 
 # number of events to process, set to -1 to process all events
 process.maxEvents = cms.untracked.PSet(
-#    input = cms.untracked.int32(150000)
+   # input = cms.untracked.int32(150000)
     input = cms.untracked.int32(-1)
     # input = cms.untracked.int32(1000)
 )
@@ -91,14 +100,16 @@ process.load('HeavyIonsAnalysis.EventAnalysis.l1object_cfi')
 process.hiEvtAnalyzer.doCentrality = cms.bool(False)
 process.hiEvtAnalyzer.doHFfilters = cms.bool(False)
 
-#from HeavyIonsAnalysis.EventAnalysis.hltobject_cfi import trigger_list_data
-#process.hltobject.triggerNames = trigger_list_data
+from HeavyIonsAnalysis.EventAnalysis.hltobject_cfi import trigger_list_data_2023_skimmed
+process.hltobject.triggerNames = trigger_list_data_2023_skimmed
 
 process.load('HeavyIonsAnalysis.EventAnalysis.particleFlowAnalyser_cfi')
+process.particleFlowAnalyser.ptMin = cms.double(0.0)
 ################################
 # electrons, photons, muons
 process.load('HeavyIonsAnalysis.EGMAnalysis.ggHiNtuplizer_cfi')
 process.ggHiNtuplizer.doMuons = cms.bool(False)
+process.ggHiNtuplizer.useValMapIso = cms.bool(False)
 process.load("TrackingTools.TransientTrack.TransientTrackBuilder_cfi")
 ################################
 # jet reco sequence
@@ -135,7 +146,8 @@ process.ak4CaloJetAnalyzer.jetTag = cms.InputTag("hltAK4CaloJetsCorrected")
 # tracks
 process.load("HeavyIonsAnalysis.TrackAnalysis.TrackAnalyzers_cff")
 #process.load("HeavyIonsAnalysis.MuonAnalysis.unpackedMuons_cfi")
-#process.load("HeavyIonsAnalysis.MuonAnalysis.muonAnalyzer_cfi")
+# muons
+process.load("HeavyIonsAnalysis.MuonAnalysis.muonAnalyzer_cfi")
 ###############################################################################
 
 # ZDC RecHit Producer
@@ -186,7 +198,7 @@ process.forest = cms.Path(
     process.HiForestInfo +
     process.hiEvtAnalyzer +
     process.hltanalysis +
-    #process.hltobject +
+    process.hltobject +
     process.l1object +
     process.trackSequencePP +
     process.hltAK4CaloRelativeCorrector + 
@@ -194,11 +206,12 @@ process.forest = cms.Path(
     process.hltAK4CaloCorrector +
     process.hltAK4CaloJetsCorrected +
     process.ak4CaloJetAnalyzer +
-    #process.particleFlowAnalyser +
-#    process.ggHiNtuplizer +
+    process.particleFlowAnalyser +
+    process.ggHiNtuplizer +
     #process.zdcdigi +
     #process.QWzdcreco +
-    process.zdcanalyzer
+    process.zdcanalyzer +
+    process.muonSequencePP
 #    process.unpackedMuons +
 #    process.muonAnalyzer
     )
@@ -243,25 +256,8 @@ process.pprimaryVertexFilter = cms.Path(process.primaryVertexFilter)
 #process.pBeamScrapingFilter=cms.Path(process.NoScraping)
 
 process.pAna = cms.EndPath(process.skimanalysis)
-#
-##from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
-##process.hltfilter = hltHighLevel.clone(
-##    HLTPaths = [
-##        #"HLT_HIZeroBias_v4",                                                     
-##        "HLT_HIMinimumBias_v2",
-##    ]
-##)
-##process.filterSequence = cms.Sequence(
-##    process.hltfilter
-##)
-##
-##process.superFilterPath = cms.Path(process.filterSequence)
-##process.skimanalysis.superFilters = cms.vstring("superFilterPath")
-##
-##for path in process.paths:
-##    getattr(process, path)._seq = process.filterSequence * getattr(process,path)._seq
-#
-#
+
+
 
 
 # Select the types of jets filled
@@ -324,38 +320,102 @@ AK3PF')
         process.forest += process.extraJetsData * process.jetsR4 * process.ak4PFJetAnalyzer
 
 #Via Jing
-#################### D/B finder #################
-AddCaloMuon = False
-runOnMC = False ## !!
+# #################### D finder #################
+# AddCaloMuon = False
+# runOnMC = False ## !!
 
-HIFormat = False
-UseGenPlusSim = False
-# VtxLabel = "unpackedTracksAndVertices"
-VtxLabel = "offlineSlimmedPrimaryVertices"
-TrkLabel = "packedPFCandidates"
-GenLabel = "prunedGenParticles"
-TrkChi2Label = "packedPFCandidateTrackChi2"
-useL1Stage2 = True
-HLTProName = "HLT"
-from Bfinder.finderMaker.finderMaker_75X_cff import finderMaker_75X
-finderMaker_75X(process, AddCaloMuon, runOnMC, HIFormat, UseGenPlusSim, VtxLabel, TrkLabel, TrkChi2Label, GenLabel, useL1Stage2, HLTProName)
-process.Dfinder.MVAMapLabel = cms.InputTag(TrkLabel, "MVAValues")
-process.Dfinder.makeDntuple = cms.bool(True)
-process.Dfinder.tkPtCut = cms.double(0.0) # before fit
-process.Dfinder.tkEtaCut = cms.double(2.4) # before fit
-process.Dfinder.dPtCut = cms.vdouble(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0) # before fit
-process.Dfinder.VtxChiProbCut = cms.vdouble(0.05, 0.05, 0.05, 0.05, 0.0, 0.0, 0.05, 0.05, 0.0, 0.0, 0.0, 0.0, 0.05, 0.05, 0.05, 0.05)
-process.Dfinder.dCutSeparating_PtVal = cms.vdouble(5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5.)
-process.Dfinder.tktkRes_svpvDistanceCut_lowptD = cms.vdouble(0., 0., 0., 0., 0., 0., 0., 0., 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0.)
-process.Dfinder.tktkRes_svpvDistanceCut_highptD = cms.vdouble(0., 0., 0., 0., 0., 0., 0., 0., 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0.)
-process.Dfinder.svpvDistanceCut_lowptD = cms.vdouble(2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0., 0., 0., 0., 0., 2.5, 2.5)
-process.Dfinder.svpvDistanceCut_highptD = cms.vdouble(2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0., 0., 0., 0., 0., 2.5, 2.5)
+# HIFormat = False
+# UseGenPlusSim = False
+# # VtxLabel = "unpackedTracksAndVertices"
+# VtxLabel = "offlineSlimmedPrimaryVertices"
+# TrkLabel = "packedPFCandidates"
+# GenLabel = "prunedGenParticles"
+# TrkChi2Label = "packedPFCandidateTrackChi2"
+# useL1Stage2 = True
+# HLTProName = "HLT"
+# from Bfinder.finderMaker.finderMaker_75X_cff import finderMaker_75X
+# finderMaker_75X(process, AddCaloMuon, runOnMC, HIFormat, UseGenPlusSim, VtxLabel, TrkLabel, TrkChi2Label, GenLabel, useL1Stage2, HLTProName)
+# process.Dfinder.MVAMapLabel = cms.InputTag(TrkLabel, "MVAValues")
+# process.Dfinder.makeDntuple = cms.bool(True)
+# process.Dfinder.tkPtCut = cms.double(0.0) # before fit
+# process.Dfinder.tkEtaCut = cms.double(2.4) # before fit
+# process.Dfinder.dPtCut = cms.vdouble(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0) # before fit
+# process.Dfinder.VtxChiProbCut = cms.vdouble(0.05, 0.05, 0.05, 0.05, 0.0, 0.0, 0.05, 0.05, 0.0, 0.0, 0.0, 0.0, 0.05, 0.05, 0.05, 0.05)
+# process.Dfinder.dCutSeparating_PtVal = cms.vdouble(5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5.)
+# process.Dfinder.tktkRes_svpvDistanceCut_lowptD = cms.vdouble(0., 0., 0., 0., 0., 0., 0., 0., 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0.)
+# process.Dfinder.tktkRes_svpvDistanceCut_highptD = cms.vdouble(0., 0., 0., 0., 0., 0., 0., 0., 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0.)
+# process.Dfinder.svpvDistanceCut_lowptD = cms.vdouble(2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0., 0., 0., 0., 0., 2.5, 2.5)
+# process.Dfinder.svpvDistanceCut_highptD = cms.vdouble(2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0., 0., 0., 0., 0., 2.5, 2.5)
 
-process.Dfinder.Dchannel = cms.vint32(1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1)
-process.Dfinder.dropUnusedTracks = cms.bool(True)
-process.Dfinder.detailMode = cms.bool(False)
+# process.Dfinder.Dchannel = cms.vint32(1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1)
+# process.Dfinder.dropUnusedTracks = cms.bool(True)
+# process.Dfinder.detailMode = cms.bool(False)
 
-process.Dfinder.printInfo = cms.bool(False)
+# process.Dfinder.printInfo = cms.bool(False)
 
-process.dfinder = cms.Path(process.DfinderSequence)
-###############################################################################
+# process.dfinder = cms.Path(process.DfinderSequence)
+# ###############################################################################
+
+# #################### B finder #################
+# AddCaloMuon = False
+# runOnMC = False ## !!
+# HIFormat = False
+# UseGenPlusSim = False
+# # VtxLabel = "unpackedTracksAndVertices"
+# VtxLabel = "offlineSlimmedPrimaryVertices"
+# TrkLabel = "packedPFCandidates"
+# TrkChi2Label = "packedPFCandidateTrackChi2"
+# GenLabel = "prunedGenParticles"
+# useL1Stage2 = True
+# HLTProName = "HLT"
+
+# process.Bfinder.MVAMapLabel = cms.InputTag(TrkLabel,"MVAValues")
+# process.Bfinder.makeBntuple = cms.bool(True)
+# process.Bfinder.tkPtCut = cms.double(0.8) # before fit
+# process.Bfinder.tkEtaCut = cms.double(2.4) # before fit
+# process.Bfinder.jpsiPtCut = cms.double(0.0) # before fit
+# process.Bfinder.bPtCut = cms.vdouble(1.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0) # before fit
+# process.Bfinder.Bchannel = cms.vint32(1, 0, 0, 1, 1, 1, 1)
+# process.Bfinder.VtxChiProbCut = cms.vdouble(0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.10)
+# process.Bfinder.svpvDistanceCut = cms.vdouble(2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 0.0)
+# process.Bfinder.doTkPreCut = cms.bool(True)
+# process.Bfinder.doMuPreCut = cms.bool(True)
+# process.Bfinder.MuonTriggerMatchingPath = cms.vstring(
+#     "HLT_HIL3Mu0NHitQ10_L2Mu0_MAXdR3p5_M1to5_v1")
+# process.Bfinder.MuonTriggerMatchingFilter = cms.vstring(
+#     "hltL3f0L3Mu0L2Mu0DR3p5FilteredNHitQ10M1to5")
+# process.BfinderSequence.insert(0, process.unpackedMuons)
+# process.BfinderSequence.insert(0, process.unpackedTracksAndVertices)
+# # process.unpackedMuons.muonSelectors = cms.vstring() # uncomment for pp
+# process.unpackedMuons.muonSelectors = cms.vstring() 
+
+# process.Bfinder.printInfo = cms.bool(False)
+
+# process.bfinder = cms.Path(process.BfinderSequence)
+
+
+from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
+process.hltfilter = hltHighLevel.clone(
+   HLTPaths = [
+       "HLT_HIUPC_ZDC1nOR_SinglePixelTrackLowPt_MaxPixelCluster400_v8",
+       "HLT_HIUPC_ZDC1nOR_MinPixelCluster400_MaxPixelCluster10000_v8",
+   ]
+)
+process.hltfilter.andOr = cms.bool(True)  # True = OR, False = AND between the HLT paths
+process.hltfilter.throw = cms.bool(False) # throw exception on unknown path names
+
+process.filterSequence = cms.Sequence(
+    process.hltfilter * 
+    process.primaryVertexFilter
+)
+
+process.superFilterPath = cms.Path(process.filterSequence)
+process.skimanalysis.superFilters = cms.vstring("superFilterPath")
+
+for path in process.paths:
+   getattr(process, path)._seq = process.hltfilter * process.filterSequence * getattr(process,path)._seq
+
+# Customisation from command line
+process.options.numberOfConcurrentLuminosityBlocks = 1
+process.options.numberOfThreads = 8
+process.options.numberOfStreams = 0
