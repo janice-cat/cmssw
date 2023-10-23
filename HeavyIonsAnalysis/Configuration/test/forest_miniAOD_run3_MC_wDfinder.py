@@ -230,7 +230,7 @@ process.load('HeavyIonsAnalysis.EventAnalysis.hffilter_cfi')
 process.pphfCoincFilter2Th4 = cms.Path(process.phfCoincFilter2Th4)
 process.pAna = cms.EndPath(process.skimanalysis)
 
-#################### D/B finder ################# 
+#################### D finder ################# 
 AddCaloMuon = False 
 runOnMC = True ## !!
 HIFormat = False 
@@ -238,8 +238,8 @@ UseGenPlusSim = False
 # VtxLabel = "unpackedTracksAndVertices"
 VtxLabel = "offlineSlimmedPrimaryVertices"
 TrkLabel = "packedPFCandidates"
-GenLabel = "prunedGenParticles"
 TrkChi2Label = "packedPFCandidateTrackChi2"
+GenLabel = "prunedGenParticles"
 useL1Stage2 = True
 HLTProName = "HLT"
 from Bfinder.finderMaker.finderMaker_75X_cff import finderMaker_75X 

@@ -230,7 +230,7 @@ process.load('HeavyIonsAnalysis.EventAnalysis.hffilter_cfi')
 process.pphfCoincFilter2Th4 = cms.Path(process.phfCoincFilter2Th4)
 process.pAna = cms.EndPath(process.skimanalysis)
 
-#################### D/B finder #################
+#################### B finder #################
 AddCaloMuon = False
 runOnMC = True ## !!
 HIFormat = False
@@ -238,11 +238,12 @@ UseGenPlusSim = False
 # VtxLabel = "unpackedTracksAndVertices"
 VtxLabel = "offlineSlimmedPrimaryVertices"
 TrkLabel = "packedPFCandidates"
+TrkChi2Label = "packedPFCandidateTrackChi2"
 GenLabel = "prunedGenParticles"
 useL1Stage2 = True
 HLTProName = "HLT"
 from Bfinder.finderMaker.finderMaker_75X_cff import finderMaker_75X
-finderMaker_75X(process, AddCaloMuon, runOnMC, HIFormat, UseGenPlusSim, VtxLabel, TrkLabel, GenLabel, useL1Stage2, HLTProName)
+finderMaker_75X(process, AddCaloMuon, runOnMC, HIFormat, UseGenPlusSim, VtxLabel, TrkLabel, TrkChi2Label, GenLabel, useL1Stage2, HLTProName)
 
 process.Bfinder.MVAMapLabel = cms.InputTag(TrkLabel,"MVAValues")
 process.Bfinder.makeBntuple = cms.bool(True)
@@ -259,8 +260,11 @@ process.Bfinder.MuonTriggerMatchingPath = cms.vstring(
     "HLT_HIL3Mu0NHitQ10_L2Mu0_MAXdR3p5_M1to5_v1")
 process.Bfinder.MuonTriggerMatchingFilter = cms.vstring(
     "hltL3f0L3Mu0L2Mu0DR3p5FilteredNHitQ10M1to5")
-process.p = cms.Path(process.BfinderSequence)
+process.BfinderSequence.insert(0, process.unpackedMuons)
+process.BfinderSequence.insert(0, process.unpackedTracksAndVertices)
+# process.unpackedMuons.muonSelectors = cms.vstring() # uncomment for pp
 
+process.p = cms.Path(process.BfinderSequence)
 
 
 ###############################

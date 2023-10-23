@@ -353,3 +353,59 @@ process.maxEvents = cms.untracked.PSet(
 process.TFileService = cms.Service("TFileService",
     fileName = cms.string(ivars.outputFile))
 
+
+#################### D finder ################# 
+AddCaloMuon = False 
+runOnMC = False ## !!
+HIFormat = False 
+UseGenPlusSim = False 
+# VtxLabel = "unpackedTracksAndVertices"
+VtxLabel = "offlineSlimmedPrimaryVertices"
+TrkLabel = "packedPFCandidates"
+TrkChi2Label = "packedPFCandidateTrackChi2"
+GenLabel = "prunedGenParticles"
+useL1Stage2 = True
+HLTProName = "HLT"
+from Bfinder.finderMaker.finderMaker_75X_cff import finderMaker_75X 
+finderMaker_75X(process, AddCaloMuon, runOnMC, HIFormat, UseGenPlusSim, VtxLabel, TrkLabel, TrkChi2Label, GenLabel, useL1Stage2, HLTProName)
+process.Dfinder.MVAMapLabel = cms.InputTag(TrkLabel, "MVAValues")
+process.Dfinder.makeDntuple = cms.bool(True)
+process.Dfinder.tkPtCut = cms.double(1.0) # before fit
+process.Dfinder.tkEtaCut = cms.double(2.4) # before fit
+process.Dfinder.dPtCut = cms.vdouble(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 2.0, 2.0) # before fit
+process.Dfinder.VtxChiProbCut = cms.vdouble(0.05, 0.05, 0.0, 0.0, 0.0, 0.0, 0.05, 0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.05, 0.05)
+process.Dfinder.dCutSeparating_PtVal = cms.vdouble(5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5.)
+process.Dfinder.tktkRes_svpvDistanceCut_lowptD = cms.vdouble(0., 0., 0., 0., 0., 0., 0., 0., 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0.)
+process.Dfinder.tktkRes_svpvDistanceCut_highptD = cms.vdouble(0., 0., 0., 0., 0., 0., 0., 0., 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0.)
+process.Dfinder.svpvDistanceCut_lowptD = cms.vdouble(2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0., 0., 0., 0., 0., 2.5, 2.5)
+process.Dfinder.svpvDistanceCut_highptD = cms.vdouble(2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0., 0., 0., 0., 0., 2.5, 2.5)
+process.Dfinder.alphaCut = cms.vdouble(0.2, 0.2, 999., 999., 999., 999., 999., 999., 999., 999., 999., 999., 999., 999., 999., 999.)
+process.Dfinder.Dchannel = cms.vint32(1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+process.Dfinder.dropUnusedTracks = cms.bool(True)
+process.Dfinder.detailMode = cms.bool(False)
+
+process.dfinder = cms.Path(process.DfinderSequence)
+
+
+
+###############################
+import FWCore.ParameterSet.VarParsing as VarParsing
+ivars = VarParsing.VarParsing('analysis')
+
+ivars.maxEvents = -1
+ivars.outputFile='HiForestMINIAOD.root'
+ivars.inputFiles='file:/eos/cms/store/group/phys_heavyions_ops/abaty/RAWPrimeChecks2023/RAWPrime/RAWPrime_Streamer_2.root'
+ivars.parseArguments() # get and parse the command line arguments
+
+process.source = cms.Source("PoolSource",
+    fileNames = cms.untracked.vstring(ivars.inputFiles),
+    # eventsToProcess = cms.untracked.VEventRange('1:236:29748033-1:236:29748033')
+)
+
+process.maxEvents = cms.untracked.PSet(
+    input = cms.untracked.int32(ivars.maxEvents)
+)
+
+process.TFileService = cms.Service("TFileService",
+    fileName = cms.string(ivars.outputFile))
+
