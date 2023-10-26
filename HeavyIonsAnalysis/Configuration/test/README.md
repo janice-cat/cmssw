@@ -65,12 +65,17 @@ Also there is a working configuration here:
 # Forest production
 - Forest codes:
   - [forest_miniAOD_run3_ppRECO_DATA.py](forest_miniAOD_run3_ppRECO_DATA.py)
-    - Add zdcanalyzer
+    - [v0] Add zdcanalyzer
+    - [v1] TDirectory's: ggHiNtuplizer, muonAnalyzerPP, Dfinder w/ more channels, Bfinder, particleFlowAnalyser
+    - [v1] Skimmed with good lumi, pprimaryVertexFilter, HLT paths
   - [forest_miniAOD_run3_ppRECO_DATA_lowerDcut.py](forest_miniAOD_run3_ppRECO_DATA_lowerDcut.py)
-    - Add zdcanalyzer
-    - Relax track pt, Dpt cuts
+    - [v0] Add zdcanalyzer
+    - [v0] Relax track pt, Dpt cuts
+    - [v1] TDirectory's: ggHiNtuplizer, muonAnalyzerPP, Dfinder w/ more channels, Bfinder, particleFlowAnalyser
+    - [v1] Skimmed with good lumi, pprimaryVertexFilter, HLT paths
 - Crab jobs:
-  - [crabForestTemplateWithEmap.py](crabForestTemplateWithEmap.py)
+  - For streamer: [crabForestTemplateWithEmap_base.py](crabForestTemplateWithEmap_base.py)
+  - For prompt-reco: [crabForestTemplateWithEmap_promptReco_base.py](crabForestTemplateWithEmap_promptReco_base.py)
 - Output paths:
   - lxplus: `/eos/cms/store/group/phys_heavyions/yuchenc/run3RapidValidation/`
   - svmithi03: `/home/data/run3RapidValidation/`
