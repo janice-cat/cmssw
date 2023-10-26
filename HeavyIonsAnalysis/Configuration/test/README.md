@@ -75,6 +75,13 @@ Also there is a working configuration here:
   - lxplus: `/eos/cms/store/group/phys_heavyions/yuchenc/run3RapidValidation/`
   - svmithi03: `/home/data/run3RapidValidation/`
 - Production history:
-  | version | run range | note |
-  |---|---|---|
-  | v0 | run 374719-375195 | only D0 candidate tree |
+  - Streamer:
+    | version | run range | note |
+    |---|---|---|
+    | v0 | run 374719-375195 | only D0 candidate tree |
+    | v1 | run 375202-375317 | [bc86464](bc86464cc74b8295dd0963bc60848dd2cda99d72) [new] TDirectory's: ggHiNtuplizer, muonAnalyzerPP, Dfinder w/ more channels, (Bfinder,) particleFlowAnalyser; [new] Skimmed with good lumi, pprimaryVertexFilter, HLT paths; B finder is turned off because of crab job memory limits |
+
+  - Prompt reco:
+    | version | run range | note |
+    |---|---|---|
+    | v1 | run 374804 | [bc86464](bc86464cc74b8295dd0963bc60848dd2cda99d72) [new] TDirectory's: ggHiNtuplizer, muonAnalyzerPP, Dfinder w/ more channels, Bfinder, particleFlowAnalyser; [new] Skimmed with good lumi, pprimaryVertexFilter, HLT paths |
