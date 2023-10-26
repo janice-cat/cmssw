@@ -39,6 +39,7 @@ process.source = cms.Source("PoolSource",
         # '/store/hidata/HIRun2023A/HIForward0/MINIAOD/PromptReco-v2/000/375/002/00000/ca3d2434-b8ff-489e-8b87-18e0e5cde2ec.root',
         # ]
         '/store/hidata/HIRun2023A/HIForward0/MINIAOD/PromptReco-v2/000/375/055/00000/4eacc5c8-5e8a-4fc1-80ee-0237cd27e364.root'
+        # '/store/hidata/HIRun2023A/HIForward1/MINIAOD/PromptReco-v2/000/375/002/00000/d9623a9c-74e7-41ae-9b6c-438a3bc2cb1f.root'
     ), 
 )
 
@@ -198,7 +199,7 @@ process.forest = cms.Path(
     process.HiForestInfo +
     process.hiEvtAnalyzer +
     process.hltanalysis +
-    process.hltobject +
+    # process.hltobject +
     process.l1object +
     process.trackSequencePP +
     process.hltAK4CaloRelativeCorrector + 
@@ -320,41 +321,41 @@ AK3PF')
         process.forest += process.extraJetsData * process.jetsR4 * process.ak4PFJetAnalyzer
 
 #Via Jing
-# #################### D finder #################
-# AddCaloMuon = False
-# runOnMC = False ## !!
+#################### D finder #################
+AddCaloMuon = False
+runOnMC = False ## !!
 
-# HIFormat = False
-# UseGenPlusSim = False
-# # VtxLabel = "unpackedTracksAndVertices"
-# VtxLabel = "offlineSlimmedPrimaryVertices"
-# TrkLabel = "packedPFCandidates"
-# GenLabel = "prunedGenParticles"
-# TrkChi2Label = "packedPFCandidateTrackChi2"
-# useL1Stage2 = True
-# HLTProName = "HLT"
-# from Bfinder.finderMaker.finderMaker_75X_cff import finderMaker_75X
-# finderMaker_75X(process, AddCaloMuon, runOnMC, HIFormat, UseGenPlusSim, VtxLabel, TrkLabel, TrkChi2Label, GenLabel, useL1Stage2, HLTProName)
-# process.Dfinder.MVAMapLabel = cms.InputTag(TrkLabel, "MVAValues")
-# process.Dfinder.makeDntuple = cms.bool(True)
-# process.Dfinder.tkPtCut = cms.double(0.0) # before fit
-# process.Dfinder.tkEtaCut = cms.double(2.4) # before fit
-# process.Dfinder.dPtCut = cms.vdouble(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0) # before fit
-# process.Dfinder.VtxChiProbCut = cms.vdouble(0.05, 0.05, 0.05, 0.05, 0.0, 0.0, 0.05, 0.05, 0.0, 0.0, 0.0, 0.0, 0.05, 0.05, 0.05, 0.05)
-# process.Dfinder.dCutSeparating_PtVal = cms.vdouble(5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5.)
-# process.Dfinder.tktkRes_svpvDistanceCut_lowptD = cms.vdouble(0., 0., 0., 0., 0., 0., 0., 0., 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0.)
-# process.Dfinder.tktkRes_svpvDistanceCut_highptD = cms.vdouble(0., 0., 0., 0., 0., 0., 0., 0., 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0.)
-# process.Dfinder.svpvDistanceCut_lowptD = cms.vdouble(2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0., 0., 0., 0., 0., 2.5, 2.5)
-# process.Dfinder.svpvDistanceCut_highptD = cms.vdouble(2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0., 0., 0., 0., 0., 2.5, 2.5)
+HIFormat = False
+UseGenPlusSim = False
+# VtxLabel = "unpackedTracksAndVertices"
+VtxLabel = "offlineSlimmedPrimaryVertices"
+TrkLabel = "packedPFCandidates"
+GenLabel = "prunedGenParticles"
+TrkChi2Label = "packedPFCandidateTrackChi2"
+useL1Stage2 = True
+HLTProName = "HLT"
+from Bfinder.finderMaker.finderMaker_75X_cff import finderMaker_75X
+finderMaker_75X(process, AddCaloMuon, runOnMC, HIFormat, UseGenPlusSim, VtxLabel, TrkLabel, TrkChi2Label, GenLabel, useL1Stage2, HLTProName)
+process.Dfinder.MVAMapLabel = cms.InputTag(TrkLabel, "MVAValues")
+process.Dfinder.makeDntuple = cms.bool(True)
+process.Dfinder.tkPtCut = cms.double(0.0) # before fit
+process.Dfinder.tkEtaCut = cms.double(2.4) # before fit
+process.Dfinder.dPtCut = cms.vdouble(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0) # before fit
+process.Dfinder.VtxChiProbCut = cms.vdouble(0.05, 0.05, 0.05, 0.05, 0.0, 0.0, 0.05, 0.05, 0.0, 0.0, 0.0, 0.0, 0.05, 0.05, 0.05, 0.05)
+process.Dfinder.dCutSeparating_PtVal = cms.vdouble(5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5.)
+process.Dfinder.tktkRes_svpvDistanceCut_lowptD = cms.vdouble(0., 0., 0., 0., 0., 0., 0., 0., 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0.)
+process.Dfinder.tktkRes_svpvDistanceCut_highptD = cms.vdouble(0., 0., 0., 0., 0., 0., 0., 0., 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0.)
+process.Dfinder.svpvDistanceCut_lowptD = cms.vdouble(2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0., 0., 0., 0., 0., 2.5, 2.5)
+process.Dfinder.svpvDistanceCut_highptD = cms.vdouble(2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0., 0., 0., 0., 0., 2.5, 2.5)
 
-# process.Dfinder.Dchannel = cms.vint32(1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1)
-# process.Dfinder.dropUnusedTracks = cms.bool(True)
-# process.Dfinder.detailMode = cms.bool(False)
+process.Dfinder.Dchannel = cms.vint32(1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1)
+process.Dfinder.dropUnusedTracks = cms.bool(True)
+process.Dfinder.detailMode = cms.bool(False)
 
-# process.Dfinder.printInfo = cms.bool(False)
+process.Dfinder.printInfo = cms.bool(False)
 
-# process.dfinder = cms.Path(process.DfinderSequence)
-# ###############################################################################
+process.dfinder = cms.Path(process.DfinderSequence)
+###############################################################################
 
 # #################### B finder #################
 # AddCaloMuon = False
@@ -397,8 +398,26 @@ AK3PF')
 from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
 process.hltfilter = hltHighLevel.clone(
    HLTPaths = [
-       "HLT_HIUPC_ZDC1nOR_SinglePixelTrackLowPt_MaxPixelCluster400_v8",
-       "HLT_HIUPC_ZDC1nOR_MinPixelCluster400_MaxPixelCluster10000_v8",
+        # Double muons
+        'HLT_HIUPC_DoubleMuCosmic*_MaxPixelCluster1000_v*',
+        'HLT_HIUPC_DoubleMuOpen*_NotMBHF*AND_v*',
+
+        # Not MB
+        'HLT_HIUPC_NotMBHF*_v*',
+
+        # Jet triggers
+        'HLT_HIUPC_SingleJet*_ZDC1n*XOR_*MaxPixelCluster*',
+        'HLT_HIUPC_SingleJet*_NotMBHF2AND_*MaxPixelCluster*',
+
+        # Single muon
+        'HLT_HIUPC_SingleMu*_NotMBHF*_MaxPixelCluster*',
+
+        # ZDC 1n or, low pixel clusters
+        'HLT_HIUPC_ZDC1nOR_SinglePixelTrackLowPt_MaxPixelCluster400_v*',
+        'HLT_HIUPC_ZDC1nOR_MinPixelCluster400_MaxPixelCluster10000_v*',
+
+        # ZB, single pixel track
+        'HLT_HIUPC_ZeroBias_SinglePixelTrack_MaxPixelTrack_v*'
    ]
 )
 process.hltfilter.andOr = cms.bool(True)  # True = OR, False = AND between the HLT paths
@@ -413,9 +432,4 @@ process.superFilterPath = cms.Path(process.filterSequence)
 process.skimanalysis.superFilters = cms.vstring("superFilterPath")
 
 for path in process.paths:
-   getattr(process, path)._seq = process.hltfilter * process.filterSequence * getattr(process,path)._seq
-
-# Customisation from command line
-process.options.numberOfConcurrentLuminosityBlocks = 1
-process.options.numberOfThreads = 8
-process.options.numberOfStreams = 0
+   getattr(process, path)._seq = process.filterSequence * getattr(process,path)._seq

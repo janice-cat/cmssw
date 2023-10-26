@@ -338,9 +338,9 @@ from Bfinder.finderMaker.finderMaker_75X_cff import finderMaker_75X
 finderMaker_75X(process, AddCaloMuon, runOnMC, HIFormat, UseGenPlusSim, VtxLabel, TrkLabel, TrkChi2Label, GenLabel, useL1Stage2, HLTProName)
 process.Dfinder.MVAMapLabel = cms.InputTag(TrkLabel, "MVAValues")
 process.Dfinder.makeDntuple = cms.bool(True)
-process.Dfinder.tkPtCut = cms.double(1.0) # before fit
+process.Dfinder.tkPtCut = cms.double(0.0) # before fit
 process.Dfinder.tkEtaCut = cms.double(2.4) # before fit
-process.Dfinder.dPtCut = cms.vdouble(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 2.0, 2.0) # before fit
+process.Dfinder.dPtCut = cms.vdouble(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0) # before fit
 process.Dfinder.VtxChiProbCut = cms.vdouble(0.05, 0.05, 0.05, 0.05, 0.0, 0.0, 0.05, 0.05, 0.0, 0.0, 0.0, 0.0, 0.05, 0.05, 0.05, 0.05)
 process.Dfinder.dCutSeparating_PtVal = cms.vdouble(5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5.)
 process.Dfinder.tktkRes_svpvDistanceCut_lowptD = cms.vdouble(0., 0., 0., 0., 0., 0., 0., 0., 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0.)
@@ -357,42 +357,42 @@ process.Dfinder.printInfo = cms.bool(False)
 process.dfinder = cms.Path(process.DfinderSequence)
 ###############################################################################
 
-# #################### B finder #################
-# AddCaloMuon = False
-# runOnMC = False ## !!
-# HIFormat = False
-# UseGenPlusSim = False
-# # VtxLabel = "unpackedTracksAndVertices"
-# VtxLabel = "offlineSlimmedPrimaryVertices"
-# TrkLabel = "packedPFCandidates"
-# TrkChi2Label = "packedPFCandidateTrackChi2"
-# GenLabel = "prunedGenParticles"
-# useL1Stage2 = True
-# HLTProName = "HLT"
+#################### B finder #################
+AddCaloMuon = False
+runOnMC = False ## !!
+HIFormat = False
+UseGenPlusSim = False
+# VtxLabel = "unpackedTracksAndVertices"
+VtxLabel = "offlineSlimmedPrimaryVertices"
+TrkLabel = "packedPFCandidates"
+TrkChi2Label = "packedPFCandidateTrackChi2"
+GenLabel = "prunedGenParticles"
+useL1Stage2 = True
+HLTProName = "HLT"
 
-# process.Bfinder.MVAMapLabel = cms.InputTag(TrkLabel,"MVAValues")
-# process.Bfinder.makeBntuple = cms.bool(True)
-# process.Bfinder.tkPtCut = cms.double(0.8) # before fit
-# process.Bfinder.tkEtaCut = cms.double(2.4) # before fit
-# process.Bfinder.jpsiPtCut = cms.double(0.0) # before fit
-# process.Bfinder.bPtCut = cms.vdouble(1.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0) # before fit
-# process.Bfinder.Bchannel = cms.vint32(1, 0, 0, 1, 1, 1, 1)
-# process.Bfinder.VtxChiProbCut = cms.vdouble(0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.10)
-# process.Bfinder.svpvDistanceCut = cms.vdouble(2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 0.0)
-# process.Bfinder.doTkPreCut = cms.bool(True)
-# process.Bfinder.doMuPreCut = cms.bool(True)
-# process.Bfinder.MuonTriggerMatchingPath = cms.vstring(
-#     "HLT_HIL3Mu0NHitQ10_L2Mu0_MAXdR3p5_M1to5_v1")
-# process.Bfinder.MuonTriggerMatchingFilter = cms.vstring(
-#     "hltL3f0L3Mu0L2Mu0DR3p5FilteredNHitQ10M1to5")
-# process.BfinderSequence.insert(0, process.unpackedMuons)
-# process.BfinderSequence.insert(0, process.unpackedTracksAndVertices)
-# # process.unpackedMuons.muonSelectors = cms.vstring() # uncomment for pp
-# process.unpackedMuons.muonSelectors = cms.vstring() 
+process.Bfinder.MVAMapLabel = cms.InputTag(TrkLabel,"MVAValues")
+process.Bfinder.makeBntuple = cms.bool(True)
+process.Bfinder.tkPtCut = cms.double(0.8) # before fit
+process.Bfinder.tkEtaCut = cms.double(2.4) # before fit
+process.Bfinder.jpsiPtCut = cms.double(0.0) # before fit
+process.Bfinder.bPtCut = cms.vdouble(1.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0) # before fit
+process.Bfinder.Bchannel = cms.vint32(1, 0, 0, 1, 1, 1, 1)
+process.Bfinder.VtxChiProbCut = cms.vdouble(0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.10)
+process.Bfinder.svpvDistanceCut = cms.vdouble(2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 0.0)
+process.Bfinder.doTkPreCut = cms.bool(True)
+process.Bfinder.doMuPreCut = cms.bool(True)
+process.Bfinder.MuonTriggerMatchingPath = cms.vstring(
+    "HLT_HIL3Mu0NHitQ10_L2Mu0_MAXdR3p5_M1to5_v1")
+process.Bfinder.MuonTriggerMatchingFilter = cms.vstring(
+    "hltL3f0L3Mu0L2Mu0DR3p5FilteredNHitQ10M1to5")
+process.BfinderSequence.insert(0, process.unpackedMuons)
+process.BfinderSequence.insert(0, process.unpackedTracksAndVertices)
+# process.unpackedMuons.muonSelectors = cms.vstring() # uncomment for pp
+process.unpackedMuons.muonSelectors = cms.vstring() 
 
-# process.Bfinder.printInfo = cms.bool(False)
+process.Bfinder.printInfo = cms.bool(False)
 
-# process.bfinder = cms.Path(process.BfinderSequence)
+process.bfinder = cms.Path(process.BfinderSequence)
 
 
 from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
