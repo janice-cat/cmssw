@@ -79,7 +79,7 @@ If this works, build is ready to produce
     | version | run range | note |
     |---|---|---|
     | v0 | run 374719-375195 | only D0 candidate tree |
-    | v1 | run 375202-375317 | [bc86464](https://github.com/janice-cat/cmssw/commit/bc86464cc74b8295dd0963bc60848dd2cda99d72) [new] TDirectory's: ggHiNtuplizer, muonAnalyzerPP, Dfinder w/ more channels, Bfinder, particleFlowAnalyser; [new] Skimmed with good lumi, pprimaryVertexFilter, HLT paths; B finder is turned off because of crab job memory limits |
+    | v1 | run 375202-375317 | [bc86464](https://github.com/janice-cat/cmssw/commit/bc86464cc74b8295dd0963bc60848dd2cda99d72) [new] TDirectory's: ggHiNtuplizer, muonAnalyzerPP, Dfinder w/ more channels, Bfinder, particleFlowAnalyser; [new] Skimmed with good lumi, pprimaryVertexFilter, HLT paths; because of crab job memory limits, (1) B finder is turned off or (2) Dfinder: pt thresh = 0.2, turn off lambda channel |
 
   - Prompt reco:
     | version | run range | note |
