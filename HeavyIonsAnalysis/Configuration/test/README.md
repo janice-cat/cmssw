@@ -73,6 +73,7 @@ Also there is a working configuration here:
     - [v0] Relax track pt, Dpt cuts
     - [v1] TDirectory's: ggHiNtuplizer, muonAnalyzerPP, Dfinder w/ more channels, Bfinder, particleFlowAnalyser
     - [v1] Skimmed with good lumi, pprimaryVertexFilter, HLT paths
+    - [v1] Dfinder: pt thresh = 0.2, turn off lambda channel (subject to crab job limitation)
 - Crab jobs:
   - For streamer: [crabForestTemplateWithEmap_base.py](crabForestTemplateWithEmap_base.py)
   - For prompt-reco: [crabForestTemplateWithEmap_promptReco_base.py](crabForestTemplateWithEmap_promptReco_base.py)
