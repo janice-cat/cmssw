@@ -18,7 +18,6 @@ def main():
 		   os.path.basename(inFileName).replace('.txt','')
 
 	runIdx 	 = prefix.replace('run','')
-	runIdx 	 = '374681'
 	lumiMask_forThisRun = np.array(lumiMask[runIdx])
 	print('lumiMask_forThisRun', lumiMask_forThisRun)
 
@@ -92,7 +91,7 @@ def main():
 		tAk4PFJet.append(uproot.open(filepath).key('ak4PFJetAnalyzer/t').get(). \
 			arrays(['jteta', 'jtpt', 'nref',
 				'jtPfNHF', 'jtPfNEF', 'jtPfMUF', 'jtPfCHF', 'jtPfCEF',
-				'jtPfNHM', 'jtPfCHM'], library='pd'))
+				'jtPfNHM', 'jtPfNEM', 'jtPfCHM'], library='pd'))
 
 		tAk4CaloJet.append(uproot.open(filepath).key('ak4CaloJetAnalyzer/caloJetTree').get(). \
 			arrays(['jteta', 'jtpt'], library='pd'). \
@@ -150,6 +149,20 @@ def main():
 
 	print(df.shape)
 
+	print('[Summary::Rate] runIdx: ',runIdx, 
+	      'PV pass rate: ', df[ df.eval('pprimaryVertexFilter==1') ].shape[0], '/', df.shape[0], '=', 
+				df[ df.eval('pprimaryVertexFilter==1') ].shape[0]/df.shape[0])
+	print('[Summary::Rate] runIdx: ',runIdx, 
+	      '(PV pass | HLT ZDCXORJet) rate: ', df[ df.eval('pprimaryVertexFilter==1 & HLT_HIUPC_SingleJet8_ZDC1nXOR_MaxPixelCluster50000_v2==1') ].shape[0], '/', 
+					          df[ df.eval('HLT_HIUPC_SingleJet8_ZDC1nXOR_MaxPixelCluster50000_v2==1') ].shape[0], '=', 
+					          df[ df.eval('pprimaryVertexFilter==1 & HLT_HIUPC_SingleJet8_ZDC1nXOR_MaxPixelCluster50000_v2==1') ].shape[0]/
+					          df[ df.eval('HLT_HIUPC_SingleJet8_ZDC1nXOR_MaxPixelCluster50000_v2==1') ].shape[0])
+	print('[Summary::Rate] runIdx: ',runIdx,
+	      '(PV pass | L1  ZDCXORJet) rate: ', df[ df.eval('pprimaryVertexFilter==1 & L1_SingleJet8_ZDC1n_XOR_BptxAND==1') ].shape[0], '/', 
+					          df[ df.eval('L1_SingleJet8_ZDC1n_XOR_BptxAND==1') ].shape[0], '=', 
+					          df[ df.eval('pprimaryVertexFilter==1 & L1_SingleJet8_ZDC1n_XOR_BptxAND==1') ].shape[0]/
+					          df[ df.eval('L1_SingleJet8_ZDC1n_XOR_BptxAND==1') ].shape[0])
+
 
 	plotAK4PFJet(df, prefix)
 	plotAK4CaloJet(df, prefix)
@@ -167,10 +180,9 @@ def main():
 def plotAK4PFJet(df, prefix):
 	_jetlist = ['jteta','jtpt',
 		    'jtPfNHF', 'jtPfNEF', 'jtPfMUF', 'jtPfCHF', 'jtPfCEF',
-		    'jtPfNHM', 'jtPfCHM']
+		    'jtPfNHM', 'jtPfNEM', 'jtPfCHM']
 	df_flatJet = flatten_df(df, _jetlist)
 
-	print(1/df_flatJet.index.shape[0])
 	dnm.plotVarsState(
 		[[ 'no cut', df_flatJet ],
 		 [ 'pass PV', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1') ] ],
@@ -212,11 +224,22 @@ def plotAK4PFJet(df, prefix):
 		[[ '', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0 & (' \
 						   '(abs(jteta)<=2.6 & jtPfNHF<0.90 & jtPfNEF<0.90 & nref>1 & jtPfMUF<0.80 & jtPfCHF>0.01 & jtPfCHM>0 & jtPfCEF<0.80) | ' \
 				 '(abs(jteta)> 2.6 & abs(jteta)<=2.7 & jtPfNHF<0.90 & jtPfNEF<0.99 &          jtPfMUF<0.80 &                jtPfCHM>0 & jtPfCEF<0.80) | ' \
-				 '(abs(jteta)> 2.7 & abs(jteta)<=3.0 &                jtPfNEF<0.99 &                                                                   jtPfNHM>1) | ' \
-				 '(abs(jteta)> 3.0 & abs(jteta)<=5.0 & jtPfNHF>0.2  & jtPfNEF<0.9  &                                                                   jtPfNHM>10) )' ) ] ]],
+				 '(abs(jteta)> 2.7 & abs(jteta)<=3.0 &                jtPfNEF<0.99 &                                                                   (jtPfNHM+jtPfNEM)>1) | ' \
+				 '(abs(jteta)> 3.0 & abs(jteta)<=5.0 & jtPfNHF>0.2  & jtPfNEF<0.9  &                                                                   (jtPfNHM+jtPfNEM)>10) )' ) ] ]],
 		[[ 'jteta', 'AK4PF jteta', (-5, 5) ],
 		 [ 'jtpt', 'AK4PF jtpt', (0, 70) ]],
 		 'img/'+prefix+'_UPCSpectra_AK4PFJet_cleanedUp_nonMB_jetid_normalized.png', 100,
+		 density=2)
+
+	dnm.plotVarsState(
+		[[ '', df_flatJet[ df_flatJet.eval('pprimaryVertexFilter==1 & L1_MinimumBiasHF1_AND_BptxAND==0 & (' \
+						   '(abs(jteta)<=2.6 & jtPfNHF<0.90 & jtPfNEF<0.90 & nref>1 & jtPfMUF<0.80 & jtPfCHF>0.01 & jtPfCHM>0 & jtPfCEF<0.80) | ' \
+				 '(abs(jteta)> 2.6 & abs(jteta)<=2.7 & jtPfNHF<0.90 & jtPfNEF<0.99 &          jtPfMUF<0.80 &                jtPfCHM>0 & jtPfCEF<0.80) | ' \
+				 '(abs(jteta)> 2.7 & abs(jteta)<=3.0 &                jtPfNEF<0.99) | ' \
+				 '(abs(jteta)> 3.0 & abs(jteta)<=5.0 & jtPfNHF>0.2  & jtPfNEF<0.9 ) )' ) ] ]],
+		[[ 'jteta', 'AK4PF jteta', (-5, 5) ],
+		 [ 'jtpt', 'AK4PF jtpt', (0, 70) ]],
+		 'img/'+prefix+'_UPCSpectra_AK4PFJet_cleanedUp_nonMB_jetid_noNeuMultCut_normalized.png', 100,
 		 density=2)
 
 def plotAK4CaloJet(df, prefix):
