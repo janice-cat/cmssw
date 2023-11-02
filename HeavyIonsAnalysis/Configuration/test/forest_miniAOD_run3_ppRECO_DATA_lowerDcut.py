@@ -38,9 +38,11 @@ process.source = cms.Source("PoolSource",
         # '/store/hidata/HIRun2023A/HIForward0/MINIAOD/PromptReco-v2/000/375/002/00000/c1252302-f9c1-4183-bd26-b39bcb5b18d9.root',
         # '/store/hidata/HIRun2023A/HIForward0/MINIAOD/PromptReco-v2/000/375/002/00000/ca3d2434-b8ff-489e-8b87-18e0e5cde2ec.root',
         # ]
-        '/store/hidata/HIRun2023A/HIForward0/MINIAOD/PromptReco-v2/000/375/055/00000/4eacc5c8-5e8a-4fc1-80ee-0237cd27e364.root'
+        # '/store/hidata/HIRun2023A/HIForward0/MINIAOD/PromptReco-v2/000/375/055/00000/4eacc5c8-5e8a-4fc1-80ee-0237cd27e364.root'
+        '/store/group/phys_heavyions/pchou/RAW2DIGI/CRAB_UserFiles/crab_HIForwardStreamers_375252/231019_160125/0001/reco_RAW2DIGI_L1Reco_RECO_PAT_inMINIAOD_1461.root',
         # '/store/hidata/HIRun2023A/HIForward1/MINIAOD/PromptReco-v2/000/375/002/00000/d9623a9c-74e7-41ae-9b6c-438a3bc2cb1f.root'
     ), 
+    # eventsToProcess=cms.untracked.VEventRange("375252:660298351-375252:660298351")
 )
 
 import FWCore.PythonUtilities.LumiList as LumiList
@@ -338,9 +340,9 @@ from Bfinder.finderMaker.finderMaker_75X_cff import finderMaker_75X
 finderMaker_75X(process, AddCaloMuon, runOnMC, HIFormat, UseGenPlusSim, VtxLabel, TrkLabel, TrkChi2Label, GenLabel, useL1Stage2, HLTProName)
 process.Dfinder.MVAMapLabel = cms.InputTag(TrkLabel, "MVAValues")
 process.Dfinder.makeDntuple = cms.bool(True)
-process.Dfinder.tkPtCut = cms.double(0.2) # before fit
+process.Dfinder.tkPtCut = cms.double(0.5) # before fit
 process.Dfinder.tkEtaCut = cms.double(2.4) # before fit
-process.Dfinder.dPtCut = cms.vdouble(0.2, 0.2, 0.2, 0.2, 1.0, 1.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0, 0.2, 0.2, 2.0, 2.0) # before fit
+process.Dfinder.dPtCut = cms.vdouble(1.5, 1.5, 1.5, 1.5, 1.0, 1.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.5, 1.5, 2.0, 2.0) # before fit
 process.Dfinder.VtxChiProbCut = cms.vdouble(0.05, 0.05, 0.05, 0.05, 0.0, 0.0, 0.05, 0.05, 0.0, 0.0, 0.0, 0.0, 0.05, 0.05, 0.05, 0.05)
 process.Dfinder.dCutSeparating_PtVal = cms.vdouble(5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5.)
 process.Dfinder.tktkRes_svpvDistanceCut_lowptD = cms.vdouble(0., 0., 0., 0., 0., 0., 0., 0., 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0.)
