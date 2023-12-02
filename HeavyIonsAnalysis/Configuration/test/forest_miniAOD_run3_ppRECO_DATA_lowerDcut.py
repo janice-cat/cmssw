@@ -42,7 +42,8 @@ process.source = cms.Source("PoolSource",
         '/store/group/phys_heavyions/pchou/RAW2DIGI/CRAB_UserFiles/crab_HIForwardStreamers_375252/231019_160125/0001/reco_RAW2DIGI_L1Reco_RECO_PAT_inMINIAOD_1461.root',
         # '/store/hidata/HIRun2023A/HIForward1/MINIAOD/PromptReco-v2/000/375/002/00000/d9623a9c-74e7-41ae-9b6c-438a3bc2cb1f.root'
     ), 
-    # eventsToProcess=cms.untracked.VEventRange("375252:660298351-375252:660298351")
+    # eventsToProcess=cms.untracked.VEventRange("375252:660298351-375252:660298351"),
+    # secondaryFileNames = cms.untracked.vstring('/store/group/phys_heavyions/pchou/RAW2DIGI/CRAB_UserFiles/crab_HIForwardStreamers_375252/231019_160125/0001/reco_RAW2DIGI_L1Reco_RECO_PAT_1461.root'),
 )
 
 import FWCore.PythonUtilities.LumiList as LumiList
@@ -105,6 +106,8 @@ process.hiEvtAnalyzer.doHFfilters = cms.bool(False)
 
 from HeavyIonsAnalysis.EventAnalysis.hltobject_cfi import trigger_list_data_2023_skimmed
 process.hltobject.triggerNames = trigger_list_data_2023_skimmed
+
+process.load('L1Trigger.L1TNtuples.l1MetFilterRecoTree_cfi')
 
 process.load('HeavyIonsAnalysis.EventAnalysis.particleFlowAnalyser_cfi')
 process.particleFlowAnalyser.ptMin = cms.double(0.0)
@@ -203,6 +206,7 @@ process.forest = cms.Path(
     process.hltanalysis +
     # process.hltobject +
     process.l1object +
+    process.l1MetFilterRecoTree +
     process.trackSequencePP +
     process.hltAK4CaloRelativeCorrector + 
     process.hltAK4CaloAbsoluteCorrector +
@@ -414,6 +418,12 @@ process.hltfilter = hltHighLevel.clone(
         # Single muon
         'HLT_HIUPC_SingleMu*_NotMBHF*_MaxPixelCluster*',
 
+        # Single EG
+        'HLT_HIUPC_SingleEG3_NotMBHF2AND_v*',
+        'HLT_HIUPC_SingleEG5_NotMBHF2AND_v*',
+        'HLT_HIUPC_SingleEG3_NotMBHF2AND_SinglePixelTrack_MaxPixelTrack_v*',
+        'HLT_HIUPC_SingleEG5_NotMBHF2AND_SinglePixelTrack_MaxPixelTrack_v*',
+
         # ZDC 1n or, low pixel clusters
         'HLT_HIUPC_ZDC1nOR_SinglePixelTrackLowPt_MaxPixelCluster400_v*',
         'HLT_HIUPC_ZDC1nOR_MinPixelCluster400_MaxPixelCluster10000_v*',
@@ -426,7 +436,7 @@ process.hltfilter.andOr = cms.bool(True)  # True = OR, False = AND between the H
 process.hltfilter.throw = cms.bool(False) # throw exception on unknown path names
 
 process.filterSequence = cms.Sequence(
-    process.hltfilter * 
+    process.hltfilter *
     process.primaryVertexFilter
 )
 
@@ -435,3 +445,8 @@ process.skimanalysis.superFilters = cms.vstring("superFilterPath")
 
 for path in process.paths:
    getattr(process, path)._seq = process.filterSequence * getattr(process,path)._seq
+
+from Configuration.StandardSequences.earlyDeleteSettings_cff import customiseEarlyDelete
+process = customiseEarlyDelete(process)
+
+process.options.wantSummary = cms.untracked.bool(True)
