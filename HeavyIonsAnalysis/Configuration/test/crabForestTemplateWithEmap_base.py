@@ -2,7 +2,7 @@ import os, sys
 
 run=sys.argv[1]
 
-for PD in range(1,20,1):
+for PD in range(0,32,1):
 	crab_script='''
 from WMCore.Configuration import Configuration
 from CRABClient.UserUtilities import getUsername
