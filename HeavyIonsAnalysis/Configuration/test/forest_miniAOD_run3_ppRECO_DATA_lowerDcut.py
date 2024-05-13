@@ -39,15 +39,45 @@ process.source = cms.Source("PoolSource",
         # '/store/hidata/HIRun2023A/HIForward0/MINIAOD/PromptReco-v2/000/375/002/00000/ca3d2434-b8ff-489e-8b87-18e0e5cde2ec.root',
         # ]
         # '/store/hidata/HIRun2023A/HIForward0/MINIAOD/PromptReco-v2/000/375/055/00000/4eacc5c8-5e8a-4fc1-80ee-0237cd27e364.root'
-        '/store/group/phys_heavyions/pchou/RAW2DIGI/CRAB_UserFiles/crab_HIForwardStreamers_375252/231019_160125/0001/reco_RAW2DIGI_L1Reco_RECO_PAT_inMINIAOD_1461.root',
+        # '/store/group/phys_heavyions/pchou/RAW2DIGI/CRAB_UserFiles/crab_HIForwardStreamers_375252/231019_160125/0001/reco_RAW2DIGI_L1Reco_RECO_PAT_inMINIAOD_1461.root',
+        'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/MINIAOD/16Jan2024-v1/2810000/0640e99d-84f5-49fd-a012-48be69252e99.root',
+        # 'file:0640e99d-84f5-49fd-a012-48be69252e99.root',
         # '/store/hidata/HIRun2023A/HIForward1/MINIAOD/PromptReco-v2/000/375/002/00000/d9623a9c-74e7-41ae-9b6c-438a3bc2cb1f.root'
     ), 
     # eventsToProcess=cms.untracked.VEventRange("375252:660298351-375252:660298351"),
-    # secondaryFileNames = cms.untracked.vstring('/store/group/phys_heavyions/pchou/RAW2DIGI/CRAB_UserFiles/crab_HIForwardStreamers_375252/231019_160125/0001/reco_RAW2DIGI_L1Reco_RECO_PAT_1461.root'),
+    # secondaryFileNames = cms.untracked.vstring(
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/0cc0b17b-193a-4efa-b4a8-ac8c601ef5f4.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/168ffff8-98c2-4637-bc52-8689c86703a4.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/1a5af614-2452-473e-8e9a-043afefc02de.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/239aad1c-e12b-421c-95db-529f797f174e.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/338cab5b-778f-4f58-92fe-42448738e68b.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/3fec0932-9f87-4bde-9832-b40b22068edc.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/4274515c-80e4-46ff-9223-e0a2767a0592.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/46f81b05-a091-4d99-9d79-136a8212291b.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/5e449762-34bb-440d-b56f-30e90ee7c745.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/6183b4ac-6df1-44ca-8fe3-7a2d5ec53649.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/61a38d70-0417-49f6-8605-873d06060a8a.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/6b6ae89d-8c01-4bbb-b67e-5eccb1fba426.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/763b007e-2bf4-402f-800c-446dea4dc63b.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/81f9d817-0bab-49bc-b0b7-3076abcd4851.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/9979d7e4-05aa-463b-a8e7-286e00ab8aba.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/abecace2-cdbf-4a88-8596-1451a02b029d.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/af8c63b9-ad12-470d-928b-3ccd1316ba67.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/b6939dac-d002-4ac3-bfd7-89610cfeb990.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/c2ed6c59-a5c6-4046-b423-f5abcd1da4d5.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/d4ec992d-d4ad-40ef-8a0c-b45e0501303b.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/e11e40fc-5622-497b-bccb-68b081b10038.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/e86f7113-5f6b-4354-b248-6762e2da72bb.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/e935cb80-e4ae-4173-97b4-24617f0e2ad3.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/f4dd702b-605b-407a-8f1d-dce34c45dc1d.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/f69b573d-6bdd-40db-98e5-29da0d559b0b.root',
+    #     'root://cms-xrd-global.cern.ch//store/hidata/HIRun2023A/HIForward0/RAW/v1/000/375/754/00000/f84a149f-7ab2-4c07-bef7-5d8402072266.root',
+    #     # '/store/group/phys_heavyions/pchou/RAW2DIGI/CRAB_UserFiles/crab_HIForwardStreamers_375252/231019_160125/0001/reco_RAW2DIGI_L1Reco_RECO_PAT_1461.root'
+    #     ),
 )
 
 import FWCore.PythonUtilities.LumiList as LumiList
-process.source.lumisToProcess = LumiList.LumiList(filename = '/eos/cms/store/group/phys_heavyions/sayan/HIN_run3_pseudo_JSON/HIPhysicsRawPrime/Golden_Online_live.json').getVLuminosityBlockRange()
+process.source.lumisToProcess = LumiList.LumiList(filename = '/eos/user/c/cmsdqm/www/CAF/certification/Collisions23HI/Cert_Collisions2023HI_374288_375823_Golden.json').getVLuminosityBlockRange()
 
 # number of events to process, set to -1 to process all events
 process.maxEvents = cms.untracked.PSet(
@@ -229,7 +259,7 @@ process.forest = cms.Path(
 ##########################
 #
 process.load('HeavyIonsAnalysis.EventAnalysis.collisionEventSelection_cff')
-#process.pclusterCompatibilityFilter = cms.Path(process.clusterCompatibilityFilter)
+process.pclusterCompatibilityFilter = cms.Path(process.clusterCompatibilityFilter)
 process.pprimaryVertexFilter = cms.Path(process.primaryVertexFilter)
 #process.load('HeavyIonsAnalysis.EventAnalysis.hffilter_cfi')
 #process.pphfCoincFilter4Th2 = cms.Path(process.phfCoincFilter4Th2)
@@ -346,15 +376,15 @@ process.Dfinder.MVAMapLabel = cms.InputTag(TrkLabel, "MVAValues")
 process.Dfinder.makeDntuple = cms.bool(True)
 process.Dfinder.tkPtCut = cms.double(0.5) # before fit
 process.Dfinder.tkEtaCut = cms.double(2.4) # before fit
-process.Dfinder.dPtCut = cms.vdouble(1.5, 1.5, 1.5, 1.5, 1.0, 1.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.5, 1.5, 2.0, 2.0) # before fit
+process.Dfinder.dPtCut = cms.vdouble(1.0, 1.0, 1.5, 1.5, 1.0, 1.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.5, 1.5, 2.0, 2.0) # before fit
 process.Dfinder.VtxChiProbCut = cms.vdouble(0.05, 0.05, 0.05, 0.05, 0.0, 0.0, 0.05, 0.05, 0.0, 0.0, 0.0, 0.0, 0.05, 0.05, 0.05, 0.05)
 process.Dfinder.dCutSeparating_PtVal = cms.vdouble(5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5.)
 process.Dfinder.tktkRes_svpvDistanceCut_lowptD = cms.vdouble(0., 0., 0., 0., 0., 0., 0., 0., 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0.)
 process.Dfinder.tktkRes_svpvDistanceCut_highptD = cms.vdouble(0., 0., 0., 0., 0., 0., 0., 0., 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0.)
-process.Dfinder.svpvDistanceCut_lowptD = cms.vdouble(2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0., 0., 0., 0., 0., 2.5, 2.5)
+process.Dfinder.svpvDistanceCut_lowptD = cms.vdouble(1., 1., 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0., 0., 0., 0., 0., 2.5, 2.5)
 process.Dfinder.svpvDistanceCut_highptD = cms.vdouble(2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 0., 0., 0., 0., 0., 0., 2.5, 2.5)
 
-process.Dfinder.Dchannel = cms.vint32(1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0)
+process.Dfinder.Dchannel = cms.vint32(1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 process.Dfinder.dropUnusedTracks = cms.bool(True)
 process.Dfinder.detailMode = cms.bool(False)
 

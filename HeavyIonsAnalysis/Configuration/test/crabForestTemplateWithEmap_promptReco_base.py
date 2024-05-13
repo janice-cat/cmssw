@@ -9,7 +9,7 @@ from CRABClient.UserUtilities import getUsername
 
 config = Configuration()
 
-jobTag = "promptReco_run{run:s}_lowerDcut_v2_HIForward{PD:d}"
+jobTag = "reReco_run{run:s}_v3_HIForward{PD:d}"
 username = getUsername()
 
 config.section_("General")
@@ -28,12 +28,13 @@ config.JobType.inputFiles = ['emap_2023_newZDC_v3.txt']
 config.JobType.allowUndistributedCMSSW = True
 
 config.section_("Data")
-config.Data.inputDataset = '/HIForward{PD:d}/HIRun2023A-PromptReco-v2/MINIAOD'
+# config.Data.inputDataset = '/HIForward{PD:d}/HIRun2023A-PromptReco-v2/MINIAOD'
+config.Data.inputDataset = '/HIForward{PD:d}/HIRun2023A-16Jan2024-v1/MINIAOD'
 config.Data.inputDBS = 'global'
 config.Data.splitting = 'LumiBased'
 config.Data.unitsPerJob = 1
 config.Data.runRange = '{run:s}-{run:s}'
-config.Data.outLFNDirBase = '/store/group/phys_heavyions/' + username + '/run3RapidValidation/promptReco_run{run:s}_lowerDcut_v2/'
+config.Data.outLFNDirBase = '/store/group/phys_heavyions/' + username + '/run3RapidValidation/reReco_run{run:s}_v3/'
 config.Data.publication = False
 
 config.section_("Site")
