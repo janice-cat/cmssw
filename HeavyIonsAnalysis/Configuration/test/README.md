@@ -104,3 +104,19 @@ If this works, build is ready to produce
     | v1 | run 374804 | [bc86464](https://github.com/janice-cat/cmssw/commit/bc86464cc74b8295dd0963bc60848dd2cda99d72) [new] TDirectory's: ggHiNtuplizer, muonAnalyzerPP, Dfinder w/ more channels, Bfinder, particleFlowAnalyser; [new] Skimmed with good lumi, pprimaryVertexFilter, HLT paths |
     | v2 | run 374804 - run 375202 | [a010239](https://github.com/janice-cat/cmssw/commit/a0102398a65ed9960004a31ab8f9dcb841c305e4) Dfinder cut: trkPt=.5, Dpt=1.5; [baa9991](https://github.com/janice-cat/cmssw/commit/baa999103e4a72dc162417817a6925f0aa81406b) [new] add MET filter TTree; single EG HLT paths |
     | v3 | (runs to be submitted: [project](https://github.com/users/janice-cat/projects/2/views/1)) | [e241320](https://github.com/janice-cat/cmssw/commit/e241320767e23bdd2db04a4e55c3c7bbe3fcfb89), [49eb507](https://github.com/janice-cat/cmssw/commit/49eb50748963ed76c195fa4109358b1639fff2bd) |
+
+- After crab submission, merging the forest files at `svmithi03`:
+  1) To check the job status and rename the forest crab directory (@`lxplus`):
+  ```bash
+  python3 renameCrabDir.py <run_no:integer>
+  ``` 
+  This will prompt up some questions if the jobs are all done or part of them are failed. One can just hit the corresponding answers
+  2) After 20 PDs are done and renamed (for a run), one can merge the forest files (@`svmithi03`):
+  ```bash
+  python3 mergeForest.py <run_no:integer>
+  ```
+  This will create the following scripts and logs:
+  - `/home/data/run3RapidValidation/reReco_run<run>_v3/script/distributeJobs.py`: the mother script to submit parallel jobs for 20 PDs
+  - `/home/data/run3RapidValidation/reReco_run<run>_v3/script/mergeJobs_HIForward{PD}.sh`: the atomic merging script. This will be copied to the home directory, and the copied script will be killed once the job is done. So one can monitor the remaining scripts to see which is not done.
+  - `/home/data/run3RapidValidation/reReco_run<run>_v3/log/mergingDetails.log`: how the merged forests are batched
+  - `/home/data/run3RapidValidation/reReco_run<run>_v3/log/mergeJobs_HIForward{PD}_forest{num}.log`: the hadd history for each merged forest file
