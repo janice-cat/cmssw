@@ -107,18 +107,18 @@ If this works, build is ready to produce
 
 - After crab submission, merging the forest files at `svmithi03`:
   1) To check the job status and rename the forest crab directory (@`lxplus`):
-  ```bash
-  python3 renameCrabDir.py <run_no:integer>
-  ``` 
-  This will prompt up some questions if the jobs are all done or part of them are failed. One can just hit the corresponding answers
+      ```bash
+      python3 renameCrabDir.py <run_no:integer>
+      ``` 
+      This will prompt up some questions if the jobs are all done or part of them are failed. One can just hit the corresponding answers
   
 
   2) After 20 PDs are done and renamed (for a run), one can merge the forest files (@`svmithi03`):
-  ```bash
-  python3 mergeForest.py <run_no:integer>
-  ```
-  This will create the following scripts and logs:
-  - `/home/data/run3RapidValidation/reReco_run<run>_v3/script/distributeJobs.py`: the mother script to submit parallel jobs for 20 PDs
-  - `/home/data/run3RapidValidation/reReco_run<run>_v3/script/mergeJobs_HIForward{PD}.sh`: the atomic merging script. This will be copied to the home directory, and the copied script will be killed once the job is done. So one can monitor the remaining scripts to see which is not done.
-  - `/home/data/run3RapidValidation/reReco_run<run>_v3/log/mergingDetails.log`: how the merged forests are batched
-  - `/home/data/run3RapidValidation/reReco_run<run>_v3/log/mergeJobs_HIForward{PD}_forest{num}.log`: the hadd history for each merged forest file
+      ```bash
+      python3 mergeForest.py <run_no:integer>
+      ```
+      This will create the following scripts and logs:
+      - `/home/data/run3RapidValidation/reReco_run<run>_v3/script/distributeJobs.py`: the mother script to submit parallel jobs for 20 PDs
+      - `/home/data/run3RapidValidation/reReco_run<run>_v3/script/mergeJobs_HIForward{PD}.sh`: the atomic merging script. This will be copied to the home directory, and the copied script will be killed once the job is done. So one can monitor the remaining scripts to see which is not done.
+      - `/home/data/run3RapidValidation/reReco_run<run>_v3/log/mergingDetails.log`: how the merged forests are batched
+      - `/home/data/run3RapidValidation/reReco_run<run>_v3/log/mergeJobs_HIForward{PD}_forest{num}.log`: the hadd history for each merged forest file
