@@ -81,7 +81,7 @@ process.GlobalTag = GlobalTag(process.GlobalTag, '132X_dataRun3_HLT_v2', '')
 
 process.sep19_2_1_dump_rawprime = cms.EDAnalyzer("sep19_2_1_dump_rawprime",
     approxSiStripClustersTag = cms.InputTag("hltSiStripClusters2ApproxClusters"),
-    doDumpInputOfSiStripClusters2ApproxClusters = cms.bool(False),
+    doDumpInputOfSiStripClusters2ApproxClusters = cms.bool(True),
     hltSiStripClusterizerForRawPrimeTag = cms.InputTag("hltSiStripClusterizerForRawPrime")
 )
 

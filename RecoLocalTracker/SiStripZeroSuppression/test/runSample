@@ -6,15 +6,15 @@ import os,sys
 jobDict = {
     'hybridZS' : {
         'Input': '/eos/cms/store/group/phys_heavyions/yuchenc/HITrackerNZS_hybridZS/hlt/local/outputPhysicsHIPhysicsRawPrime.root',
-        'Options': 'n=100'
+        'Options': 'n=25'
     },
     'hybridZS_withDetIDMask' : {
         'Input': '/eos/cms/store/group/phys_heavyions/yuchenc/HITrackerNZS_hybridZS_withDetIDMask/hlt/local/outputPhysicsHIPhysicsRawPrime.root',
-        'Options': 'n=100'
+        'Options': 'n=25'
     },
     'FEDlikeZS' : {
         'Input': '/eos/cms/store/group/phys_heavyions/yuchenc/HITrackerNZS_FEDlikeZS/hlt/local/outputPhysicsHIPhysicsRawPrime.root',
-        'Options': 'n=100'
+        'Options': 'n=25'
     },
 }
 if (not os.path.exists('output/')): os.makedirs('output/')
