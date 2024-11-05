@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+#
+import os,sys
+
+##### PbPb
+jobDict = {
+    'hybridZS' : {
+        'Input': '/eos/cms/store/group/phys_heavyions/yuchenc/HITrackerNZS_hybridZS/hlt/local/outputPhysicsHIPhysicsRawPrime.root',
+        'Options': 'n=100'
+    },
+    'hybridZS_withDetIDMask' : {
+        'Input': '/eos/cms/store/group/phys_heavyions/yuchenc/HITrackerNZS_hybridZS_withDetIDMask/hlt/local/outputPhysicsHIPhysicsRawPrime.root',
+        'Options': 'n=100'
+    },
+    'FEDlikeZS' : {
+        'Input': '/eos/cms/store/group/phys_heavyions/yuchenc/HITrackerNZS_FEDlikeZS/hlt/local/outputPhysicsHIPhysicsRawPrime.root',
+        'Options': 'n=100'
+    },
+}
+if (not os.path.exists('output/')): os.makedirs('output/')
+if (not os.path.exists('log/')): os.makedirs('log/')
+
+
+for (l, files) in jobDict.items():
+	os.system("cmsRun sep19_2_1_dump_rawprime.py inputFiles={i:s} "
+	          "outputFile=output/{l:s}_sep19_2_1_dump_rawprime.root {o:s} "
+	          # "eventsToProcessTxt=/eos/cms/store/group/phys_heavyions/wangj/RECO2023/PPRefZeroBias0_373710/{l:s}.txt "
+	          "> log/sep19_2_1_dump_rawprime_{l:s}.log 2>&1; "
+	          "tail log/sep19_2_1_dump_rawprime_{l:s}.log".format(
+	          	i = files['Input'],
+              o = files['Options'],
+	          	l = l ) )
+	# os.system("cmsRun sep19_3_1_dump_rawprime.py inputFiles={i:s} "
+	#           "outputFile=output/{l:s}_sep19_3_1_dump_rawprime.root {o:s} "
+	#           # "eventsToProcessTxt=/eos/cms/store/group/phys_heavyions/wangj/RECO2023/PPRefZeroBias0_373710/{l:s}.txt "
+	#           "> log/sep19_3_1_dump_rawprime_{l:s}.log 2>&1".format(
+	#           	i = files['Input'],
+  #               o = files['Options'],
+	#           	l = l ) )
