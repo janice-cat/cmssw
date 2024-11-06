@@ -22,7 +22,7 @@ config.JobType.allowUndistributedCMSSW = True
 config.JobType.numCores=4
 
 config.section_("Data")
-config.Data.userInputFiles = [ 'file:'+filename for filename in glob.glob('/eos/cms/store/t0streamer/Data/PhysicsHITrackerNZS/000/'+RUN[:3]+'/'+RUN[3:]+'/*dat') ]
+config.Data.userInputFiles = [ filename.replace('/eos/cms','') for filename in glob.glob('/eos/cms/store/t0streamer/Data/PhysicsHITrackerNZS/000/'+RUN[:3]+'/'+RUN[3:]+'/*dat') ]
 config.Data.totalUnits = len(config.Data.userInputFiles)
 # config.Data.inputDataset = '/HITrackerNZS/HIRun2023A-v1/RAW'
 config.Data.inputDBS = 'global'
