@@ -1,4 +1,4 @@
-- Production workflow
+## Production workflow
   - CMSSW version: `CMSSW_14_1_4_patch3`
   - Step1) HLT
     - Config srcipt ([hlt_cfg.py](hlt_cfg.py))  
@@ -48,3 +48,11 @@
       
       - **One will need to manually modify the run number** ([this line](forestSubmitHITrackerNZS.py#L7))
       - **One will need to manually specify the `inputDataset` that the reco step would run on** ([this line](forestSubmitHITrackerNZS.py#L42)). This field will be the output dataset of the RECO step
+
+
+## Documentation of the hack HLT ZS configuration
+- This is to mask out **manually** bad tracker module in the hybrid ZS step
+- The modification is on `RecoLocalTracker/SiStripZeroSuppression/src/SiStripRawProcessingAlgorithms.cc`:
+  <img width="1255" alt="截圖 2024-11-06 18 58 04" src="https://github.com/user-attachments/assets/294b78e6-3deb-4a49-8181-055628f871fa">
+- After the modification one will need to rebuild the CMSSW software by doing: `scram b -j 8`.
+
