@@ -7,7 +7,7 @@ config = Configuration()
 
 config.section_("General")
 config.General.requestName = JOBTAG
-config.General.workArea = 'WorkArea_HITrackerNZS_withDetIDMask'
+config.General.workArea = 'WorkArea_HITrackerNZS'
 config.General.transferOutputs = True
 config.General.transferLogs = False
 
@@ -24,11 +24,11 @@ config.Data.inputDataset = '/HITrackerNZS/HIRun2023A-v1/RAW'
 config.Data.inputDBS = 'global'
 config.Data.splitting = 'LumiBased'
 config.Data.unitsPerJob = 20
-# config.Data.outLFNDirBase = '/store/group/phys_heavyions/'+USERNAME+'/HITrackerNZS_hybridZS_withDetIDMask/hlt/'
-config.Data.outLFNDirBase = '/store/user/'+USERNAME+'/HITrackerNZS_hybridZS_withDetIDMask/hlt/'
+# config.Data.outLFNDirBase = '/store/group/phys_heavyions/'+USERNAME+'/HITrackerNZS_hybridZS/hlt/'
+config.Data.outLFNDirBase = '/store/user/'+USERNAME+'/HITrackerNZS_hybridZS/hlt/'
 config.Data.publication = True
-# config.Data.outputPrimaryDataset = 'HITrackerNZS_hybridZS_withDetIDMask_hlt'
-config.Data.outputDatasetTag = 'HITrackerNZS_hybridZS_withDetIDMask_hlt'
+# config.Data.outputPrimaryDataset = 'HITrackerNZS_hybridZS_hlt'
+config.Data.outputDatasetTag = 'HITrackerNZS_hybridZS_hlt'
 # config.Data.publishDBS = 'https://cmsweb.cern.ch/dbs/prod/phys03/DBSWriter'
 
 config.section_("Site")

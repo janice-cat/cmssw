@@ -12,8 +12,8 @@ config.General.transferOutputs = True
 config.General.transferLogs = False
 
 config.section_("JobType")
-config.JobType.maxMemoryMB = 2500
-config.JobType.maxJobRuntimeMin = 330
+config.JobType.maxMemoryMB = 10000
+config.JobType.maxJobRuntimeMin = 600
 config.JobType.pluginName = 'Analysis'
 config.JobType.psetName = 'hlt_cfg.py'
 config.JobType.allowUndistributedCMSSW = True
