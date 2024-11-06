@@ -45,5 +45,5 @@
         <img width="1020" alt="截圖 2024-11-06 12 42 16" src="https://github.com/user-attachments/assets/9e2efafa-5bed-45da-9140-6c62ace39472">
       </details>
       
-      - **One will need to manually specify the `inputDataset` that the reco step would run on** ([this line](forestSubmitHITrackerNZS#L38)). This field will be the output dataset of the HLT step
-      - **One will need to modify the `outLFNDirBase` on `eos`** ([this line](forestSubmitHITrackerNZS#L53))
+      - **One will need to manually specify the `inputDataset` that the reco step would run on** ([this line](forestSubmitHITrackerNZS.py#L38)). This field will be the output dataset of the HLT step
+      - **One will need to modify the `outLFNDirBase` on `eos`** ([this line](forestSubmitHITrackerNZS.py#L53))
