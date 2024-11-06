@@ -5,7 +5,7 @@
       is based on `hltGetConfiguration /users/soohwan/HLT_141X/TrackerZS/HLT_ZBMBRawPrime/V1 --process MYHLT --full --offline --data --type HIon --unprescale --globaltag 141X_dataRun3_HLT_v1 --max-events 1000 --output all`.
     - Crab config script ([hltSubmitHITrackerNZS.py](hltSubmitHITrackerNZS.py))
       - `inputDataset` now is set to 2024 PhysicsHITrackerNZS streamer files
-      - **One will need to manually modify the run number** ([this line](hltSubmitHITrackerNZS.py#5))
+      - **One will need to manually modify the run number** ([this line](hltSubmitHITrackerNZS.py#L5))
       - **One might need to modify the storageSite to the one that you have the write permint** ([this line](hltSubmitHITrackerNZS.py#L43))
       
   - Step2) RECO
