@@ -27,7 +27,7 @@
       cmsenv
 
       ### under CMSSW_14_1_4_patch3/src/
-      git clone -b 14_1_3 git@github.com:RAGHUMATAPITA/2024HIRunNtupleTest.git .
+      git clone -b 14_1_3 git@github.com:RAGHUMATAPITA/2024HIRunNtupleTest.git
       mv 2024HIRunNtupleTest/HITrackingStudies ./
       scram b -j 8
 
