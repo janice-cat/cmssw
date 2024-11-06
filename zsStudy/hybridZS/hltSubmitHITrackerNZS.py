@@ -1,13 +1,15 @@
 from WMCore.Configuration import Configuration
 from CRABClient.UserUtilities import getUsername
-JOBTAG = 'HITrackerNZS'
+import glob as glob
 USERNAME = getUsername()
+RUN    = '387867'
+JOBTAG = 'HITrackerNZS_2024Data_'+RUN
 
 config = Configuration()
 
 config.section_("General")
 config.General.requestName = JOBTAG
-config.General.workArea = 'WorkArea_HITrackerNZS'
+config.General.workArea = 'WorkArea_'+JOBTAG
 config.General.transferOutputs = True
 config.General.transferLogs = False
 
@@ -20,15 +22,17 @@ config.JobType.allowUndistributedCMSSW = True
 config.JobType.numCores=4
 
 config.section_("Data")
-config.Data.inputDataset = '/HITrackerNZS/HIRun2023A-v1/RAW'
+config.Data.userInputFiles = [ 'file:'+filename for filename in glob.glob('/eos/cms/store/t0streamer/Data/PhysicsHITrackerNZS/000/'+RUN[:3]+'/'+RUN[3:]+'/*dat') ]
+config.Data.totalUnits = len(config.Data.userInputFiles)
+# config.Data.inputDataset = '/HITrackerNZS/HIRun2023A-v1/RAW'
 config.Data.inputDBS = 'global'
-config.Data.splitting = 'LumiBased'
-config.Data.unitsPerJob = 20
-# config.Data.outLFNDirBase = '/store/group/phys_heavyions/'+USERNAME+'/HITrackerNZS_hybridZS/hlt/'
-config.Data.outLFNDirBase = '/store/user/'+USERNAME+'/HITrackerNZS_hybridZS/hlt/'
+config.Data.splitting = 'FileBased'
+config.Data.unitsPerJob = 2
+# config.Data.outLFNDirBasqe = '/store/group/phys_heavyions/'+USERNAME+'/'+JOBTAG+'_hybridZS/hlt/'
+config.Data.outLFNDirBase = '/store/user/'+USERNAME+'/'+JOBTAG+'_hybridZS/hlt/'
 config.Data.publication = True
-# config.Data.outputPrimaryDataset = 'HITrackerNZS_hybridZS_hlt'
-config.Data.outputDatasetTag = 'HITrackerNZS_hybridZS_hlt'
+config.Data.outputPrimaryDataset = JOBTAG+'_hybridZS'
+config.Data.outputDatasetTag = JOBTAG+'_hybridZS_hlt'
 # config.Data.publishDBS = 'https://cmsweb.cern.ch/dbs/prod/phys03/DBSWriter'
 
 config.section_("Site")

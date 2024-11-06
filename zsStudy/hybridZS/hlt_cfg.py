@@ -4042,12 +4042,9 @@ process.schedule = cms.Schedule( *(process.HLTriggerFirstPath, process.Status_On
 
 
 # source module (EDM inputs)
-process.source = cms.Source( "PoolSource",
+process.source = cms.Source( "NewEventStreamFileReader",
     fileNames = cms.untracked.vstring(
-        'file:RelVal_Raw_HIon_DATA.root',
-    ),
-    inputCommands = cms.untracked.vstring(
-        'keep *'
+        'file:/eos/cms/store/t0streamer/Data/PhysicsHITrackerNZS/000/387/867/run387867_ls0001_streamPhysicsHITrackerNZS_StorageManager.dat'
     )
 )
 
@@ -4096,7 +4093,7 @@ _customInfo['inputFiles'][True]  = "file:RelVal_Raw_HIon_DATA.root"
 _customInfo['inputFiles'][False] = "file:RelVal_Raw_HIon_MC.root"
 _customInfo['maxEvents' ]=  -1
 _customInfo['globalTag' ]= "141X_dataRun3_HLT_v1"
-_customInfo['inputFile' ]=  ['file:/eos/cms/store/group/phys_heavyions/soohwan/samples/HLTEphemeralHLTPhysics_RAW/hltHIEphemeral_HLTPhyics_RAW_Run375790_lumiWith160.root']
+_customInfo['inputFile' ]=  ['file:/eos/cms/store/t0streamer/Data/PhysicsHITrackerNZS/000/387/867/run387867_ls0001_streamPhysicsHITrackerNZS_StorageManager.dat']
 _customInfo['realData'  ]=  True
 
 from HLTrigger.Configuration.customizeHLTforALL import customizeHLTforAll

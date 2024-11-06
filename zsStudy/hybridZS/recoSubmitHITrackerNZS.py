@@ -1,13 +1,14 @@
 from WMCore.Configuration import Configuration
 from CRABClient.UserUtilities import getUsername
-JOBTAG = 'HITrackerNZS_reco'
 USERNAME = getUsername()
+RUN    = '387867'
+JOBTAG = 'HITrackerNZS_2024Data_'+RUN
 
 config = Configuration()
 
 config.section_("General")
-config.General.requestName = JOBTAG
-config.General.workArea = 'WorkArea_HITrackerNZS'
+config.General.requestName = JOBTAG+'_reco'
+config.General.workArea = 'WorkArea_'+JOBTAG
 config.General.transferOutputs = True
 config.General.transferLogs = False
 
@@ -24,9 +25,9 @@ config.Data.inputDataset = '/HITrackerNZS/yuchenc-HITrackerNZS_hybridZS_hlt-570e
 config.Data.inputDBS = 'phys03'
 config.Data.splitting = 'FileBased'
 config.Data.unitsPerJob = 1
-config.Data.outLFNDirBase = '/store/user/'+USERNAME+'/HITrackerNZS_hybridZS/reco/'
+config.Data.outLFNDirBase = '/store/user/'+USERNAME+'/'+JOBTAG+'_hybridZS/reco/'
 config.Data.publication = True
-config.Data.outputDatasetTag = 'HITrackerNZS_hybridZS_reco'
+config.Data.outputDatasetTag = JOBTAG+'_hybridZS_reco'
 # config.Data.publishDBS = 'https://cmsweb.cern.ch/dbs/prod/phys03/DBSWriter'
 
 config.section_("Site")

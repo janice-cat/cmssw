@@ -163,7 +163,7 @@ if (options.sample == "MC_MiniAOD" or options.sample == "MC_RecoDebug" or option
     ])
 if (options.sample == "Data_Reco_AOD" or options.sample == "Data_MiniAOD"):
     #process.GlobalTag = GlobalTag(process.GlobalTag, '132X_dataRun3_Prompt_v7', '') # 2023
-    process.GlobalTag = GlobalTag(process.GlobalTag, '141X_dataRun3_Prompt_v3', '') # 2024
+    process.GlobalTag = GlobalTag(process.GlobalTag, '141X_dataRun3_Express_v3', '') # 2024
     process.GlobalTag.snapshotTime = cms.string("9999-12-31 23:59:59.000")
     process.GlobalTag.toGet.extend([
         cms.PSet(record = cms.string("HeavyIonRcd"),

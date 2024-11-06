@@ -3,15 +3,19 @@
 
 import CRABClient
 from WMCore.Configuration import Configuration
+USERNAME = getUsername()
+RUN    = '387867'
+JOBTAG = 'HITrackerNZS_2024Data_'+RUN
+
 config = Configuration() ###create a Configuration object
 
 config.section_('General')###add a new section of type "General"
 ###General: In this section, the user specifies generic parameters about the request (e.g. request name).
-config.General.workArea     = 'WorkArea_HITrackerNZS' ###fixed name for projects dir in my area
+config.General.workArea 		= 'WorkArea_'+JOBTAG
 
 #config.General.requestName  = 'preliminary2018Cuts_effTables_generalTracks_DefaultSelection' #sub dir with prefix "crab_". Change it for each task
 #config.General.requestName  = 'preliminary2018Cuts_effTables_generalTracks_TightSelection'
-config.General.requestName  = 'HITrackerNZS_forest_102910'
+config.General.requestName  = JOBTAG+'_forest'
 
 
 config.General.transferLogs = True 
@@ -50,7 +54,7 @@ config.Data.inputDBS          = 'phys03'
 #config.Data.outLFN            = '/store/user/caber/TESTJOBS_RecoWithNewPixelTracks'
 
 #config.Data.outLFNDirBase            = '/store/user/caber/EventSizeSubDetectors_FlowCorrDataset'
-config.Data.outLFNDirBase            = '/store/group/phys_heavyions/yuchenc/HITrackerNZS_hybridZS/forest_102910/'
+config.Data.outLFNDirBase            = '/store/group/phys_heavyions/'+USERNAME+'/'+JOBTAG+'_hybridZS/forest/'
 
 
 ################################
