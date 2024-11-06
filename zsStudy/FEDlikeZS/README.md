@@ -7,6 +7,8 @@
       - `inputDataset` now is set to 2023 HITrackerNZS PD ([this line](hltSubmitHITrackerNZS.py#L23))
       - **One will need to manually modify the PD to run on the 2024 PbPb data**
       - **One might need to modify the storageSite to the one that you have the write permint** ([this line](hltSubmitHITrackerNZS.py#L36))
+      - Diff with the nominal hybrid-ZS setting:
+        <img width="871" alt="截圖 2024-11-04 17 22 02" src="https://github.com/user-attachments/assets/7b5fc73f-a830-4361-a35a-80d0e1bc8bd5">
 
   - Step2) RECO
     - Config script ([recoPbPbprime2mini_RAW2DIGI_L1Reco_RECO.py](recoPbPbprime2mini_RAW2DIGI_L1Reco_RECO.py))  
