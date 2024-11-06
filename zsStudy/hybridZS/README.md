@@ -12,7 +12,7 @@
     - Config script ([recoPbPbprime2mini_RAW2DIGI_L1Reco_RECO.py](recoPbPbprime2mini_RAW2DIGI_L1Reco_RECO.py))  
       is based on `cmsDriver.py recoPbPbprime2mini --conditions 141X_dataRun3_Prompt_v3 -s RAW2DIGI,L1Reco,RECO --datatier AOD --eventcontent AOD --data  --process reRECO --scenario pp --customise Configuration/DataProcessing/RecoTLR.customisePostEra_Run3 --no_exec --era Run3_pp_on_PbPb_approxSiStripClusters_2024 --repacked`
     - Crab config script ([recoSubmitHITrackerNZS.py](recoSubmitHITrackerNZS.py))
-      - **One will need to manually modify the run number** ([this line](recoSubmitHITrackerNZS.py#4))
+      - **One will need to manually modify the run number** ([this line](recoSubmitHITrackerNZS.py#L4))
       - **One will need to manually specify the `inputDataset` that the reco step would run on** ([this line](recoSubmitHITrackerNZS.py#L24)). This field will be the output dataset of the HLT step
       - **One might need to modify the storageSite to the one that you have the write permint** ([this line](recoSubmitHITrackerNZS.py#L38))
     
@@ -46,5 +46,5 @@
         <img width="1020" alt="截圖 2024-11-06 12 42 16" src="https://github.com/user-attachments/assets/9e2efafa-5bed-45da-9140-6c62ace39472">
       </details>
       
-      - **One will need to manually modify the run number** ([this line](forestSubmitHITrackerNZS.py#7))
+      - **One will need to manually modify the run number** ([this line](forestSubmitHITrackerNZS.py#L7))
       - **One will need to manually specify the `inputDataset` that the reco step would run on** ([this line](forestSubmitHITrackerNZS.py#L42)). This field will be the output dataset of the RECO step
