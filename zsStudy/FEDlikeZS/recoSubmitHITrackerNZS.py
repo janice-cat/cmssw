@@ -1,34 +1,32 @@
 from WMCore.Configuration import Configuration
 from CRABClient.UserUtilities import getUsername
-JOBTAG = 'HITrackerNZS'
+JOBTAG = 'HITrackerNZS_reco'
 USERNAME = getUsername()
 
 config = Configuration()
 
 config.section_("General")
 config.General.requestName = JOBTAG
-config.General.workArea = 'WorkArea_HITrackerNZS_withDetIDMask'
+config.General.workArea = 'WorkArea_HITrackerNZS'
 config.General.transferOutputs = True
 config.General.transferLogs = False
 
 config.section_("JobType")
 config.JobType.maxMemoryMB = 10000
-config.JobType.maxJobRuntimeMin = 600
+config.JobType.maxJobRuntimeMin = 330
 config.JobType.pluginName = 'Analysis'
-config.JobType.psetName = 'hlt_cfg.py'
+config.JobType.psetName = 'recoPbPbprime2mini_RAW2DIGI_L1Reco_RECO.py'
 config.JobType.allowUndistributedCMSSW = True
 config.JobType.numCores=4
 
 config.section_("Data")
-config.Data.inputDataset = '/HITrackerNZS/HIRun2023A-v1/RAW'
-config.Data.inputDBS = 'global'
-config.Data.splitting = 'LumiBased'
-config.Data.unitsPerJob = 20
-# config.Data.outLFNDirBase = '/store/group/phys_heavyions/'+USERNAME+'/HITrackerNZS_hybridZS_withDetIDMask/hlt/'
-config.Data.outLFNDirBase = '/store/user/'+USERNAME+'/HITrackerNZS_hybridZS_withDetIDMask/hlt/'
+config.Data.inputDataset = '/HITrackerNZS/yuchenc-HITrackerNZS_FEDlikeZS_hlt-d7ec7f9fc9141d9f6a4dfb5aa37ce883/USER'
+config.Data.inputDBS = 'phys03'
+config.Data.splitting = 'FileBased'
+config.Data.unitsPerJob = 1
+config.Data.outLFNDirBase = '/store/user/'+USERNAME+'/HITrackerNZS_FEDlikeZS/reco/'
 config.Data.publication = True
-# config.Data.outputPrimaryDataset = 'HITrackerNZS_hybridZS_withDetIDMask_hlt'
-config.Data.outputDatasetTag = 'HITrackerNZS_hybridZS_withDetIDMask_hlt'
+config.Data.outputDatasetTag = 'HITrackerNZS_FEDlikeZS_reco'
 # config.Data.publishDBS = 'https://cmsweb.cern.ch/dbs/prod/phys03/DBSWriter'
 
 config.section_("Site")
