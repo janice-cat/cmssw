@@ -26,30 +26,29 @@ jobDict = {
     #     'Input': 'file:/eos/cms/store/group/phys_heavyions/yuchenc/HITrackerNZS_hybridZS_withDetIDMask/hlt/local/outputPhysicsHIPhysicsRawPrime.root',
     #     'Options': 'n=25'
     # },
-	### 2024 crab sample (lumi 20)
-    'hybridZS_2024Data_crab_ls20' : {
-        'Input': '/store/user/eprifti/HITrackerNZS_2024Data_387867_hybridZS/hlt/HITrackerNZS_2024Data_387867_hybridZS/HITrackerNZS_2024Data_387867_hybridZS_hlt/241106_190831/0000/outputPhysicsHIPhysicsRawPrime_10.root',
+	### 2024 crab sample (lumi 35)
+    'hybridZS_2024Data_crab_ls35' : {
+        'Input': '/store/user/eprifti/HITrackerNZS_2024Data_387867_hybridZS/hlt/HITrackerNZS_2024Data_387867_hybridZS/HITrackerNZS_2024Data_387867_hybridZS_hlt/241106_190831/0000/outputPhysicsHIPhysicsRawPrime_18.root',
         'Options': 'n=25'
     },
-    'hybridZS_withDetIDMask_2024Data_crab_ls20' : {
-        'Input': '/store/user/yuchenc/HITrackerNZS_2024Data_387867_hybridZS/hlt/HITrackerNZS_2024Data_387867_hybridZS/HITrackerNZS_2024Data_387867_hybridZS_hlt/241106_182601/0000/outputPhysicsHIPhysicsRawPrime_10.root',
+    'hybridZS_withDetIDMask_2024Data_crab_ls35' : {
+        'Input': '/store/user/yuchenc/HITrackerNZS_2024Data_387867_hybridZS/hlt/HITrackerNZS_2024Data_387867_hybridZS/HITrackerNZS_2024Data_387867_hybridZS_hlt/241106_172103/0000/outputPhysicsHIPhysicsRawPrime_18.root',
         'Options': 'n=25'
     },
-
-
 }
 if (not os.path.exists('output/')): os.makedirs('output/')
 if (not os.path.exists('log/')): os.makedirs('log/')
 
 
 for (l, files) in jobDict.items():
-	os.system("cmsRun sep19_2_1_dump_rawprime.py inputFiles={i:s} "
+	os.system("rm -f output/{l:s}_sep19_2_1_dump_rawprime*root; "
+              "cmsRun sep19_2_1_dump_rawprime.py inputFiles={i:s} "
 	          "outputFile=output/{l:s}_sep19_2_1_dump_rawprime.root {o:s} "
 	          # "eventsToProcessTxt=/eos/cms/store/group/phys_heavyions/wangj/RECO2023/PPRefZeroBias0_373710/{l:s}.txt "
 	          "> log/sep19_2_1_dump_rawprime_{l:s}.log 2>&1; "
 	          "tail log/sep19_2_1_dump_rawprime_{l:s}.log".format(
 	          	i = files['Input'],
-              o = files['Options'],
+                o = files['Options'],
 	          	l = l ) )
 	# os.system("cmsRun sep19_3_1_dump_rawprime.py inputFiles={i:s} "
 	#           "outputFile=output/{l:s}_sep19_3_1_dump_rawprime.root {o:s} "
