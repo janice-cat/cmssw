@@ -3,6 +3,7 @@
 
 import CRABClient
 from WMCore.Configuration import Configuration
+from CRABClient.UserUtilities import getUsername
 USERNAME = getUsername()
 RUN    = '387867'
 JOBTAG = 'HITrackerNZS_2024Data_'+RUN
@@ -39,7 +40,7 @@ config.JobType.inputFiles = ['CentralityTable_HFtowers200_DataPbPb_periHYDJETsha
 config.section_('Data')###add a new section of type "Data"
 ###Data: This section contains all the parameters related to the data to be analyzed, 
 ###including the splitting parameters.
-config.Data.inputDataset      = '/HITrackerNZS/yuchenc-HITrackerNZS_hybridZS_reco-ddaee9b237e6c2c81d04fac352b807d7/USER'
+config.Data.inputDataset      = '/HITrackerNZS_2024Data_387867_hybridZS/yuchenc-HITrackerNZS_2024Data_387867_hybridZS_reco-30933291112e63d3d684f9e8df68927c/USER'
 config.Data.splitting         = 'FileBased'
 #config.Data.unitsPerJob       = X ###files per job (but not impose)
 #config.Data.totalUnits        = Y ###how many files to analyze

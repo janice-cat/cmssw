@@ -46,8 +46,8 @@
         <img width="1020" alt="截圖 2024-11-06 12 42 16" src="https://github.com/user-attachments/assets/9e2efafa-5bed-45da-9140-6c62ace39472">
       </details>
       
-      - **One will need to manually modify the run number** ([this line](forestSubmitHITrackerNZS.py#L7))
-      - **One will need to manually specify the `inputDataset` that the reco step would run on** ([this line](forestSubmitHITrackerNZS.py#L42)). This field will be the output dataset of the RECO step
+      - **One will need to manually modify the run number** ([this line](forestSubmitHITrackerNZS.py#L8))
+      - **One will need to manually specify the `inputDataset` that the reco step would run on** ([this line](forestSubmitHITrackerNZS.py#L43)). This field will be the output dataset of the RECO step
 
 
 ## Documentation of the hack HLT ZS configuration
