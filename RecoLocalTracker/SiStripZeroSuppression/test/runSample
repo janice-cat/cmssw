@@ -4,18 +4,39 @@ import os,sys
 
 ##### PbPb
 jobDict = {
-    'hybridZS' : {
-        'Input': '/eos/cms/store/group/phys_heavyions/yuchenc/HITrackerNZS_hybridZS/hlt/local/outputPhysicsHIPhysicsRawPrime.root',
+	# ### small sample
+    # 'hybridZS' : {
+    #     'Input': 'file:/eos/cms/store/group/phys_heavyions/yuchenc/HITrackerNZS_hybridZS/hlt/local/outputPhysicsHIPhysicsRawPrime.root',
+    #     'Options': 'n=25'
+    # },
+    # 'hybridZS_withDetIDMask' : {
+    #     'Input': 'file:/eos/cms/store/group/phys_heavyions/yuchenc/HITrackerNZS_hybridZS_withDetIDMask/hlt/local/outputPhysicsHIPhysicsRawPrime.root',
+    #     'Options': 'n=25'
+    # },
+    # 'FEDlikeZS' : {
+    #     'Input': 'file:/eos/cms/store/group/phys_heavyions/yuchenc/HITrackerNZS_FEDlikeZS/hlt/local/outputPhysicsHIPhysicsRawPrime.root',
+    #     'Options': 'n=25'
+    # },
+	# ### crab sample (lumi .. )
+    # 'hybridZS_crab_ls' : {
+    #     'Input': 'file:/eos/cms/store/group/phys_heavyions/yuchenc/HITrackerNZS_hybridZS/hlt/local/outputPhysicsHIPhysicsRawPrime.root',
+    #     'Options': 'n=25'
+    # },
+    # 'hybridZS_withDetIDMask_crab_ls' : {
+    #     'Input': 'file:/eos/cms/store/group/phys_heavyions/yuchenc/HITrackerNZS_hybridZS_withDetIDMask/hlt/local/outputPhysicsHIPhysicsRawPrime.root',
+    #     'Options': 'n=25'
+    # },
+	### 2024 crab sample (lumi 20)
+    'hybridZS_2024Data_crab_ls20' : {
+        'Input': '/store/user/eprifti/HITrackerNZS_2024Data_387867_hybridZS/hlt/HITrackerNZS_2024Data_387867_hybridZS/HITrackerNZS_2024Data_387867_hybridZS_hlt/241106_190831/0000/outputPhysicsHIPhysicsRawPrime_10.root',
         'Options': 'n=25'
     },
-    'hybridZS_withDetIDMask' : {
-        'Input': '/eos/cms/store/group/phys_heavyions/yuchenc/HITrackerNZS_hybridZS_withDetIDMask/hlt/local/outputPhysicsHIPhysicsRawPrime.root',
+    'hybridZS_withDetIDMask_2024Data_crab_ls20' : {
+        'Input': '/store/user/yuchenc/HITrackerNZS_2024Data_387867_hybridZS/hlt/HITrackerNZS_2024Data_387867_hybridZS/HITrackerNZS_2024Data_387867_hybridZS_hlt/241106_182601/0000/outputPhysicsHIPhysicsRawPrime_10.root',
         'Options': 'n=25'
     },
-    'FEDlikeZS' : {
-        'Input': '/eos/cms/store/group/phys_heavyions/yuchenc/HITrackerNZS_FEDlikeZS/hlt/local/outputPhysicsHIPhysicsRawPrime.root',
-        'Options': 'n=25'
-    },
+
+
 }
 if (not os.path.exists('output/')): os.makedirs('output/')
 if (not os.path.exists('log/')): os.makedirs('log/')

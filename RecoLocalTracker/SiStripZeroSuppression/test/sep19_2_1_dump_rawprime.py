@@ -40,7 +40,7 @@ if options.n != -1:
 # process.source = cms.Source("PoolSource",
 process.source = cms.Source(
     "NewEventStreamFileReader" if ".dat" in options.inputFiles[0] else "PoolSource",
-    fileNames = cms.untracked.vstring(['file:'+f for f in options.inputFiles]),
+    fileNames = cms.untracked.vstring([f for f in options.inputFiles]),
     # secondaryFileNames = cms.untracked.vstring(),
     # eventsToProcess = cms.untracked.VEventRange( list( open(options.eventsToProcessTxt).readlines() ) )
 )
