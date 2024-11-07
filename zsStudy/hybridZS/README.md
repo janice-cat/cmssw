@@ -14,7 +14,7 @@
     - Crab config script ([recoSubmitHITrackerNZS.py](recoSubmitHITrackerNZS.py))
       - **One will need to manually modify the run number** ([this line](recoSubmitHITrackerNZS.py#L4))
       - **One will need to manually specify the `inputDataset` that the reco step would run on** ([this line](recoSubmitHITrackerNZS.py#L24)). This field will be the output dataset of the HLT step
-      - **One might need to modify the storageSite to the one that you have the write permint** ([this line](recoSubmitHITrackerNZS.py#L38))
+      - **One might need to modify the storageSite to the one that you have the write permint** ([this line](recoSubmitHITrackerNZS.py#L35))
     
   - Step3) Forest/trackTree
     - Setup: https://github.com/RAGHUMATAPITA/2024HIRunNtupleTest/tree/14_1_3
